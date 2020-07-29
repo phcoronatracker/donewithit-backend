@@ -40,13 +40,13 @@ const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters
 const sigKey = process.env.SIG_KEY; //64-byte length 64-bit characters
 
 //userSchema.plugin(encrypt, { encryptionKey: encKey, signingKey: sigKey, encryptedFields:['password'] });
-userSchema.plugin(findOrCreate);
+//userSchema.plugin(findOrCreate);
 
 const User = mongoose.model('User', userSchema);
 
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser((user, done) => {
-    done(null, user._id);
+    done(null, user.id);
 });
 passport.deserializeUser((id, done) => {
     User.findById(id, (err, user) => {
@@ -72,7 +72,7 @@ passport.use(new LocalStrategy(
 
 app.post('/login', (req, res) => {
     const user = new User({
-        email: req.body.username,
+        email: req.body.email,
         password: req.body.password
     });
 
@@ -96,7 +96,7 @@ app.post('/register', (req, res) => {
 
         user.save(err => {
             if(err) throw err;
-            console.log(`Successfully created user ${user._id}`);
+            console.log(`Successfully created user ${user.id}`);
         });
     });
 });

@@ -105,21 +105,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/listings', (req, res) => {
-
-    const list = new Listing({
-        title: "Gray Couch in Good Condition!",
-        images: [{ url: "https://firebasestorage.googleapis.com/v0/b/done-with-it-photos.appspot.com/o/images%2FF1BE4F6A-701F-45A6-A024-BB5487EB3A0A.jpg?alt=media&token=f020d65e-7060-42e0-92e9-1166968fc3d6" }],
-        price: 300,
-        categoryId: 1,
-        userId: 2,
-        location: {
-            latitude: 37.78825,
-            longitude: -122.4324
-        }
-    });
-
-    list.save();
-
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);

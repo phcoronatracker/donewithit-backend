@@ -36,6 +36,22 @@ const userSchema = new mongoose.Schema({
     },
 }, { versionKey: false });
 
+const imageSchema = new mongoose.Schema({
+    url: String
+}, { versionKey: false })
+
+const listingSchema = new mongoose.Schema({
+    title: String,
+    images: [imageSchema],
+    price: Number,
+    categoryId: Number,
+    userId: Number,
+    location: {
+        latitude: mongoose.Types.Decimal128,
+        longitude: mongoose.Types.Decimal128,
+    }
+}, { versionKey: false })
+
 const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters
 const sigKey = process.env.SIG_KEY; //64-byte length 64-bit characters
 
@@ -43,6 +59,7 @@ userSchema.plugin(encrypt, { encryptionKey: encKey, signingKey: sigKey, encrypte
 //userSchema.plugin(findOrCreate);
 
 const User = mongoose.model('User', userSchema);
+const Listing = mongoose.model('Listing', listingSchema);
 
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser((user, done) => {
@@ -85,7 +102,15 @@ app.get('/', (req, res) => {
         res.json({ auth: true });
     else
         res.json({ auth: false });
-})
+});
+
+app.get('listings', (req, res) => {
+    Listing.find({}, (err, docs) => {
+        if(err) throw err;
+        res.json(docs);
+    });
+});
+
 
 app.post('/login', (req, res) => {
     console.log(req.body);
@@ -117,7 +142,6 @@ app.post('/register', (req, res) => {
         user.save(err => {
             if(err) throw err;
             console.log(`Successfully created user ${user._id}`);
-            req.isUnauthenticated(false);
             res.redirect('/');
         });
     });

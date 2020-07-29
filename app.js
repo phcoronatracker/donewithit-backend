@@ -10,12 +10,12 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
+app.set('trust proxy', 1);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.SECRET,
-    httpOnly: true,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false },
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         minlength: 8
     },
-}, { versionKey: false });
+}, { versionKey: false, _id: "id" });
 
 const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters
 const sigKey = process.env.SIG_KEY; //64-byte length 64-bit characters

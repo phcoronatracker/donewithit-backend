@@ -70,6 +70,13 @@ passport.use(new LocalStrategy(
     }
 ));
 
+app.post('/', (req, res) => {
+    if(req.isAuthenticated())
+        res.json({ auth: true });
+    else
+        res.json({ auth: false });
+})
+
 app.post('/login', (req, res) => {
     const user = new User({
         email: req.body.email,
@@ -97,6 +104,7 @@ app.post('/register', (req, res) => {
         user.save(err => {
             if(err) throw err;
             console.log(`Successfully created user ${user.id}`);
+            res.redirect('/');
         });
     });
 });

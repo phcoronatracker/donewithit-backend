@@ -80,14 +80,14 @@ passport.use(new LocalStrategy(
     }
 ));
 
-app.get('/auth', (req, res) => {
+app.get('/', (req, res) => {
     if(req.isAuthenticated())
         res.json({ auth: true });
     else
         res.json({ auth: false });
 })
 
-app.post('/', (req, res) => {
+app.post('/login', (req, res) => {
     console.log(req.body);
     const user = new User({
         email: req.body.email,
@@ -100,7 +100,7 @@ app.post('/', (req, res) => {
         //Creates a local cookie
         passport.authenticate('local')(req, res, () => {
             console.log("Auth Success!");
-            res.redirect('/auth');
+            res.redirect('/');
         });
     });
 })
@@ -117,7 +117,7 @@ app.post('/register', (req, res) => {
         user.save(err => {
             if(err) throw err;
             console.log(`Successfully created user ${user._id}`);
-            res.redirect('/auth');
+            res.redirect('/');
         });
     });
 });

@@ -96,8 +96,10 @@ app.post('/', (req, res) => {
 
     req.login(user, err => {
         if(err) throw err;
+        console.log("No error");
         //Creates a local cookie
         passport.authenticate('local')(req, res, () => {
+            console.log("Auth Success!");
             res.redirect('/auth');
         });
     });

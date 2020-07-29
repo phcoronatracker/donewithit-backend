@@ -70,7 +70,7 @@ passport.use(new LocalStrategy(
     }
 ));
 
-app.post('/', (req, res) => {
+app.get('/', (req, res) => {
     if(req.isAuthenticated())
         res.json({ auth: true });
     else
@@ -108,13 +108,5 @@ app.post('/register', (req, res) => {
         });
     });
 });
-
-app.get('/', (req, res) => {
-    res.send("Home");
-})
-
-app.get('/register', (req, res) => {
-    res.send("Register")
-})
 
 app.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

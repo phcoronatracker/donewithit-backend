@@ -27,8 +27,6 @@ mongoose.connect(process.env.DB_URL, { dbName: "donewithit", useNewUrlParser: tr
     console.log("Connected to Atlas Cluster successfully!");
 }).catch((err) => console.log(err));
 
-mongoose.set("useCreateIndex", true);
-
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,

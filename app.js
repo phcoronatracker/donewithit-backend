@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         minlength: 8
     },
-}, { versionKey: false, _id: "id" });
+}, { versionKey: false });
 
 const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters
 const sigKey = process.env.SIG_KEY; //64-byte length 64-bit characters
@@ -46,7 +46,7 @@ const User = mongoose.model('User', userSchema);
 
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user._id);
 });
 passport.deserializeUser((id, done) => {
     User.findById(id, (err, user) => {
@@ -78,6 +78,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+    console.log(req.body);
     const user = new User({
         email: req.body.email,
         password: req.body.password
@@ -86,7 +87,7 @@ app.post('/login', (req, res) => {
     req.login(user, err => {
         if(err) throw err;
         //Creates a local cookie
-        passport.authenticate('local', { failureRedirect: '/login?error=404' })(req, res, () => {
+        passport.authenticate('local')(req, res, () => {
             res.redirect('/');
         });
     });

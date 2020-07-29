@@ -105,6 +105,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/listings', (req, res) => {
+
+    const list = new Listing({
+        title: "Red Jacket for Sale!",
+        images: [{ url: "https://firebasestorage.googleapis.com/v0/b/done-with-it-photos.appspot.com/o/images%2FD5B7FE8C-F326-407A-A61B-B01A4E36621A.jpg?alt=media&token=f56f8167-2492-4342-beeb-2398b075987a" }],
+        price: 100,
+        categoryId: 5,
+        userId: 1,
+        location: {
+            latitude: 37.78825,
+            longitude: -122.4324
+        }
+    });
+
+    list.save();
+
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);

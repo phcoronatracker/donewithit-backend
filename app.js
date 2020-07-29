@@ -10,7 +10,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -102,6 +102,10 @@ app.post('/register', (req, res) => {
         });
     });
 });
+
+app.get('/', (req, res) => {
+    res.send("Home");
+})
 
 app.get('/register', (req, res) => {
     res.send("Register")

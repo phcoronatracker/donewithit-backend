@@ -104,7 +104,7 @@ app.get('/', (req, res) => {
         res.json({ auth: false });
 });
 
-app.get('listings', (req, res) => {
+app.get('/listings', (req, res) => {
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);

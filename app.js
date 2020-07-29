@@ -117,6 +117,7 @@ app.post('/register', (req, res) => {
         user.save(err => {
             if(err) throw err;
             console.log(`Successfully created user ${user._id}`);
+            req.isUnauthenticated(false);
             res.redirect('/');
         });
     });

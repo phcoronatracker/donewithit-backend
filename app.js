@@ -58,11 +58,21 @@ passport.deserializeUser((id, done) => {
 passport.use(new LocalStrategy(
     function(username, password, done) {
         User.findOne({ email: username }, function (err, user) {
-            if(err) { return done(err); }
-            else if(!user) { return done(null, false); }
+            if(err) { 
+                console.log("Error:", err);
+                return done(err); 
+            }
+            else if(!user) { 
+                console.log("No user");
+                return done(null, false); 
+            }
             else {
                 argon2.password_verify(user.password, password).then(match => {
-                    if(!match) { return done(null, false); }
+                    if(!match) { 
+                        console.log("Password not match")
+                        return done(null, false);  
+                    }
+                    console.log("Password match");
                     return done(null, user);
                 });
             }
@@ -82,7 +92,7 @@ app.post('/login', (req, res) => {
     const user = new User({
         email: req.body.email,
         password: req.body.password
-    });
+    })
 
     req.login(user, err => {
         if(err) throw err;

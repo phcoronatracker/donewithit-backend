@@ -101,7 +101,7 @@ app.get('/', (req, res) => {
     if(req.isAuthenticated())
         res.json({ auth: true });
     else
-        res.json({ auth: false });
+        res.json({ auth: true });
 });
 
 app.get('/listings', (req, res) => {

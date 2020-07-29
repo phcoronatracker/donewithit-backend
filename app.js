@@ -86,7 +86,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-    console.log(req.body.password);
+    console.log(req.body);
     argon2.password_hash(req.body.password).then(hashed => {
         const user = new User({
             name: req.body.name,

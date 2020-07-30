@@ -8,7 +8,6 @@ const argon2 = require("./src/password");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const Firebase = require('./src/firebase');
 
 const app = express();
 const port = process.env.PORT || 9000;

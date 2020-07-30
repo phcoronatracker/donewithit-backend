@@ -150,8 +150,6 @@ app.post('/register', (req, res) => {
 
 app.post('/listings', (req, res) => {
     console.log(req.body);
-    
-    res.redirect('/');
 });
 
 app.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

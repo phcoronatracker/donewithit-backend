@@ -8,6 +8,7 @@ const argon2 = require("./src/password");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const Firebase = require('./src/firebase');
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -149,7 +150,31 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/listings', (req, res) => {
-    console.log(req.body);
+    const data = req.body;
+    const firebaseURIs = [];
+
+    data.images.forEach(image => {
+        const firebase = new Firebase(image);
+        const firebaseURI = firebase._uploadImage();
+        const imageObject = { uri: firebaseURI };
+        firebaseURIs.push(imageObject);
+    });
+
+    const listing = new Listing({
+        title: data.title,
+        images: firebaseURIs,
+        price: data.price,
+        categoryId: data.categoryId,
+        userId: data.userId,
+        description: data.description,
+        location: data.location
+    });
+
+    listing.save(err => {
+        if(err) throw err;
+        console.log("Successfully added listing", listing._id);
+        res.redirect('/');
+    });
 });
 
 app.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

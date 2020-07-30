@@ -150,6 +150,7 @@ app.post('/register', (req, res) => {
 
 app.post('/listings', (req, res) => {
     const data = req.body;
+    console.log(data);
 
     const listing = new Listing({
         title: data.title,

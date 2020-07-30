@@ -151,18 +151,10 @@ app.post('/register', (req, res) => {
 
 app.post('/listings', (req, res) => {
     const data = req.body;
-    const firebaseURIs = [];
-
-    data.images.forEach(image => {
-        const firebase = new Firebase(image);
-        const firebaseURI = firebase._uploadImage();
-        const imageObject = { uri: firebaseURI };
-        firebaseURIs.push(imageObject);
-    });
 
     const listing = new Listing({
         title: data.title,
-        images: firebaseURIs,
+        images: data.images,
         price: data.price,
         categoryId: data.categoryId,
         userId: data.userId,

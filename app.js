@@ -61,6 +61,7 @@ userSchema.plugin(encrypt, { encryptionKey: encKey, signingKey: sigKey, encrypte
 
 const User = mongoose.model('User', userSchema);
 const Listing = mongoose.model('Listing', listingSchema);
+const Image = mongoose.model('Image', imageSchema);
 
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser((user, done) => {
@@ -152,9 +153,15 @@ app.post('/listings', (req, res) => {
     const data = req.body;
     console.log(data);
 
+    const images = data.images.map(url => {
+        return new Image({
+            url: url
+        });
+    })
+
     const listing = new Listing({
         title: data.title,
-        images: data.images,
+        images: images,
         price: data.price,
         categoryId: data.categoryId,
         userId: data.userId,

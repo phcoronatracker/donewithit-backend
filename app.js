@@ -152,8 +152,6 @@ app.post('/listings', (req, res) => {
     const data = req.body;
     console.log(data);
 
-    /** 
-
     const listing = new Listing({
         title: data.title,
         images: data.images,
@@ -170,7 +168,6 @@ app.post('/listings', (req, res) => {
         res.redirect('/');
     });
 
-    */
 });
 
 app.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

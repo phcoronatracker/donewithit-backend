@@ -8,7 +8,6 @@ const argon2 = require("./src/password");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const imageThumbnail = require('image-thumbnail');
 const createThumbnail = require('./src/thumbnail');
 
 const app = express();
@@ -41,7 +40,7 @@ const userSchema = new mongoose.Schema({
 const imageSchema = new mongoose.Schema({
     url: String,
     thumbnail: String
-}, { versionKey: false })
+}, { versionKey: false, _id: false });
 
 const listingSchema = new mongoose.Schema({
     title: String,
@@ -151,11 +150,9 @@ app.post('/register', (req, res) => {
 
 app.post('/listings', async (req, res) => {
     const data = req.body;
-    console.log(data);
 
     const images = await Promise.all(data.images.map(async url => {
         const thumbnail = await createThumbnail(url);
-        console.log(thumbnail);
         const image =  new Image({
             url: url,
             thumbnail: thumbnail

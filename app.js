@@ -1,15 +1,15 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const argon2 = require("./src/password");
 const createThumbnail = require('./src/thumbnail');
-const model = require('./database/model');
+const { Listing, Image } = require('./database/model');
+const auth = require('./routes/auth');
 
 const app = express();
 const port = process.env.PORT || 9000;
-const { User, Listing, Image } = model;
 
 app.use(bodyParser.json());
+app.use('/auth', auth);
 
 app.get('/', (req, res) => {
     res.send("Hello");
@@ -19,27 +19,6 @@ app.get('/listings', (req, res) => {
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);
-    });
-});
-
-app.post('/auth', (req, res) => {
-    console.log(req.body);
-});
-
-app.post('/register', async (req, res) => {
-    console.log(req.body);
-    const hashedPassword = await argon2.password_hash(req.body.password);
-    
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: hashedPassword
-    });
-
-    user.save(err => {
-        if(err) throw err;
-        console.log(`Successfully created user ${user._id}`);
-        res.redirect('/');
     });
 });
 

@@ -14,21 +14,21 @@ router.post('/', (req, res) => {
 router.post('/register', async (req, res) => {
     console.log(req.body);
     const hashedPassword = await argon2.password_hash(req.body.password);
-
-    User.findOne({ email: req.body.email }, (err, res) => {
-        console.log(res);
-    })
-    
     const user = new User({
         name: req.body.name,
         email: req.body.email,
         password: hashedPassword
     });
 
-    user.save(err => {
+    User.findOne({ email: req.body.email }, (err, docs) => {
         if(err) throw err;
-        console.log(`Successfully created user ${user._id}`);
-        res.end("Successful registration");
+        if(docs) res.status(409).send({ error: "User already exists" });
+
+        user.save(err => {
+            if(err) throw err;
+            console.log(`Successfully created user ${user._id}`);
+            res.end("Successful registration");
+        });
     });
 });
 

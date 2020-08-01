@@ -22,12 +22,12 @@ router.post('/register', async (req, res) => {
 
     User.findOne({ email: req.body.email }, (err, docs) => {
         if(err) throw err;
-        if(docs) res.status(409).send({ error: "User already exists" });
+        if(docs) return res.status(409).send({ error: "User already exists" });
 
         user.save(err => {
             if(err) throw err;
             console.log(`Successfully created user ${user._id}`);
-            res.end("Successful registration");
+            return res.end("Successful registration");
         });
     });
 });

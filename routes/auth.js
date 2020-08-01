@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     console.log(req.body);
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     console.log(req.body);
     const hashedPassword = await argon2.password_hash(req.body.password);
     

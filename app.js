@@ -155,10 +155,12 @@ app.post('/listings', (req, res) => {
 
     const images = data.images.map(async url => {
         const thumbnail = await createThumbnail(url);
-        return new Image({
+        const image =  new Image({
             url: url,
             thumbnail: thumbnail
         });
+
+        return image;
     })
 
     const listing = new Listing({

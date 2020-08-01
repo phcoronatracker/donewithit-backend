@@ -8,6 +8,8 @@ const argon2 = require("./src/password");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const imageThumbnail = require('image-thumbnail');
+const createThumbnail = require('./src/thumbnail');
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -37,7 +39,8 @@ const userSchema = new mongoose.Schema({
 }, { versionKey: false });
 
 const imageSchema = new mongoose.Schema({
-    url: String
+    url: String,
+    thumbnail: String
 }, { versionKey: false })
 
 const listingSchema = new mongoose.Schema({
@@ -100,10 +103,7 @@ passport.use(new LocalStrategy(
 ));
 
 app.get('/', (req, res) => {
-    if(req.isAuthenticated())
-        res.json({ auth: true });
-    else
-        res.json({ auth: true });
+    res.send("Hello");
 });
 
 app.get('/listings', (req, res) => {
@@ -153,9 +153,11 @@ app.post('/listings', (req, res) => {
     const data = req.body;
     console.log(data);
 
-    const images = data.images.map(url => {
+    const images = data.images.map(async url => {
+        const thumbnail = await createThumbnail(url);
         return new Image({
-            url: url
+            url: url,
+            thumbnail: thumbnail
         });
     })
 

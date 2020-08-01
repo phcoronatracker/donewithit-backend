@@ -149,19 +149,20 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.post('/listings', (req, res) => {
+app.post('/listings', async (req, res) => {
     const data = req.body;
     console.log(data);
 
-    const images = data.images.map(async url => {
+    const images = await Promise.all(data.images.map(async url => {
         const thumbnail = await createThumbnail(url);
+        console.log(thumbnail);
         const image =  new Image({
             url: url,
             thumbnail: thumbnail
         });
 
         return image;
-    })
+    }));
 
     const listing = new Listing({
         title: data.title,

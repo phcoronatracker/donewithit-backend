@@ -38,7 +38,6 @@ const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters
 const sigKey = process.env.SIG_KEY; //64-byte length 64-bit characters
 
 userSchema.plugin(encrypt, { encryptionKey: encKey, signingKey: sigKey, encryptedFields:['password'] });
-userSchema.plugin(findOrCreate);
 
 const User = mongoose.model('User', userSchema);
 const Listing = mongoose.model('Listing', listingSchema);

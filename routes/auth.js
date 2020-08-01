@@ -14,6 +14,10 @@ router.post('/', (req, res) => {
 router.post('/register', async (req, res) => {
     console.log(req.body);
     const hashedPassword = await argon2.password_hash(req.body.password);
+
+    User.findOne({ email: req.body.email }, (err, res) => {
+        console.log(res);
+    })
     
     const user = new User({
         name: req.body.name,

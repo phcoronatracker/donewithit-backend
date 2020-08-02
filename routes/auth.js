@@ -19,7 +19,7 @@ router.post('/', (req, res) => {
 
         const match = await argon2.password_verify(docs.password, password);
 
-        if(!match) res.status(409).send({ error: "Incorrect password" });
+        if(!match) return res.status(409).send({ error: "Incorrect password" });
 
         const token = jwt.sign({
             userId: docs._id,

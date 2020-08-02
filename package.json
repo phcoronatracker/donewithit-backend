@@ -17,8 +17,8 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "image-thumbnail": "^1.0.10",
+        "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.9.26",
-        "mongoose-encryption": "^2.0.2",
-        "mongoose-findorcreate": "^3.0.0"
+        "mongoose-encryption": "^2.0.2"
     }
 }

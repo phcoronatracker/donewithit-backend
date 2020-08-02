@@ -1,7 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const argon2 = require('../src/password');
+const jwt = require('jsonwebtoken');
 
 const { User } = require('../database/model');
 
@@ -9,10 +11,27 @@ router.use(bodyParser.json());
 
 router.post('/', (req, res) => {
     console.log(req.body);
+    const { email, password } = req.body;
+
+    User.findOne({ email: email }, async (err, docs) => {
+        if(err) throw err;
+        if(!docs) return res.status(422).send({ error: "User does not exist" });
+
+        const match = await argon2.password_verify(docs.password, password);
+
+        if(!match) res.status(409).send({ error: "Incorrect password" });
+
+        const token = jwt.sign({
+            userId: docs._id,
+            name: docs.name,
+            email
+        }, process.env.SECRET);
+        
+        return res.send(token); 
+    });
 });
 
 router.post('/register', async (req, res) => {
-    console.log(req.body);
     const hashedPassword = await argon2.password_hash(req.body.password);
     const user = new User({
         name: req.body.name,

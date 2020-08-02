@@ -26,8 +26,8 @@ router.post('/', (req, res) => {
             name: docs.name,
             email
         }, process.env.SECRET);
-        
-        return res.send(token); 
+
+        return res.end(token); 
     });
 });
 

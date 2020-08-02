@@ -1,7 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const encrypt = require("mongoose-encryption");
-const findOrCreate = require('mongoose-findorcreate');
 
 mongoose.connect(process.env.DB_URL, { dbName: "donewithit", useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true }).then(() => {
     console.log("Connected to Atlas Cluster successfully!");

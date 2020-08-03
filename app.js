@@ -48,7 +48,7 @@ app.post('/listings', async (req, res) => {
     listing.save(err => {
         if(err) throw err;
         console.log("Successfully added listing", listing._id);
-        res.redirect('/');
+        return res.end("Successfully added listing");
     });
 });
 

@@ -40,8 +40,8 @@ const messageSchema = new mongoose.Schema({
     to: mongoose.Types.ObjectId,
     listing: mongoose.Types.ObjectId,
     content: String,
-    timestamp: { type: Date, default: Date.now() }
-});
+    timestamp: { type: Date, default: new Date().getTime() }
+}, { versionKey: false });
 
 const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters
 const sigKey = process.env.SIG_KEY; //64-byte length 64-bit characters

@@ -25,8 +25,7 @@ router.post('/', auth, (req, res) => {
     message.save((err, doc) => {
         if(err) throw err;
         
-        console.log(doc);
-
+        sendNotification(req.user.token, doc.content);
         return res.end("Successfully sent the message");
     });
 });

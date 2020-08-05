@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         minlength: 8
     },
+    expoPushToken: String
 }, { versionKey: false });
 
 const imageSchema = new mongoose.Schema({

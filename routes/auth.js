@@ -1,13 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
-const argon2 = require('../src/password');
+const argon2 = require('../util/password');
 const jwt = require('jsonwebtoken');
 
 const { User } = require('../database/model');
-
-router.use(bodyParser.json());
 
 router.post('/', (req, res) => {
     console.log(req.body);

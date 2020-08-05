@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require("body-parser");
-const createThumbnail = require('../src/thumbnail');
+const createThumbnail = require('../util/thumbnail');
 const { Listing, Image } = require('../database/model');
 const auth = require('../middleware/auth');
-
-router.use(bodyParser.json());
 
 router.get('/', auth, (req, res) => {
     Listing.find({}, (err, docs) => {
@@ -14,7 +11,7 @@ router.get('/', auth, (req, res) => {
     });
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const data = req.body;
 
     const images = await Promise.all(data.images.map(async url => {
@@ -32,7 +29,7 @@ router.post('/', async (req, res) => {
         images: images,
         price: data.price,
         categoryId: data.categoryId,
-        userId: data.userId,
+        userId: req.user.userId,
         description: data.description,
         location: data.location
     });

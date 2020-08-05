@@ -30,3 +30,5 @@ router.post('/', auth, (req, res) => {
         return res.end("Successfully sent the message");
     });
 });
+
+module.exports = router;

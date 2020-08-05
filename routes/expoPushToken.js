@@ -14,6 +14,8 @@ router.post('/', auth, (req, res) => {
 
         console.log(req.body.token);
         docs.expoPushToken = req.body.token;
+        console.log(docs);
+        res.status(201).send("Sucessfully added push token");
     });
 });
 

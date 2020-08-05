@@ -40,7 +40,7 @@ const messageSchema = new mongoose.Schema({
     to: mongoose.Types.ObjectId,
     listing: mongoose.Types.ObjectId,
     content: String,
-    timestamp: { type: Date, default: new Date().getTime() }
+    timestamp: { type: Number, default: new Date().getTime() }
 }, { versionKey: false });
 
 const encKey = process.env.ENC_KEY; //32-byte length 64-bit characters

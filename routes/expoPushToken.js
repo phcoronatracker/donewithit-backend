@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 const { User } = require("../database/model");
 
 router.post('/', auth, (req, res) => {
-    User.findById(req.user.userId, (err, docs) => {
+    User.findById(req.user.userId, async (err, docs) => {
         if(err) throw err;
         if(!docs) return res.status(422).send({ error: "User does not exist" });
 

@@ -3,11 +3,9 @@ const express = require('express');
 const router = express.Router();
 const argon2 = require('../util/password');
 const jwt = require('jsonwebtoken');
-
 const { User } = require('../database/model');
 
 router.post('/', (req, res) => {
-    console.log(req.body);
     const { email, password } = req.body;
 
     User.findOne({ email: email }, async (err, docs) => {

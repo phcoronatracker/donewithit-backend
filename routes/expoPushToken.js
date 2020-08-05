@@ -7,11 +7,13 @@ const { User } = require("../database/model");
 router.use(bodyParser.json());
 
 router.post('/', auth, (req, res) => {
-    User.findById(req.user._id, (err, docs) => {
+    console.log(req.user);
+    User.findById(req.user.userId, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.status(422).send({ error: "User does not exist" });
 
         console.log(req.body.token);
+        docs.expoPushToken = req.body.token;
     });
 });
 

@@ -29,7 +29,7 @@ router.post('/', auth, (req, res) => {
         User.findById(data.to, (error, docs) => {
             if(error) throw error;
 
-            sendNotification(docs.expoPushToken, docs.eventNames, message.content);
+            sendNotification(docs.expoPushToken, docs.name, message.content);
             return res.end("Successfully sent the message");
         });
     });

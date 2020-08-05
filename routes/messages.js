@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
-const { Message } = require("../database/model");
+const { Message, User } = require("../database/model");
 
 router.get('/', auth, (req, res) => {
     Message.find({ to: req.user.userId }, (err, docs) => {
@@ -22,11 +22,15 @@ router.post('/', auth, (req, res) => {
         content: data.content
     });
 
-    message.save((err, doc) => {
+    Message.create(message, (err, message) => {
         if(err) throw err;
-        
-        sendNotification(req.user.token, doc.content);
-        return res.end("Successfully sent the message");
+
+        User.findById(data.to, (error, docs) => {
+            if(error) throw error;
+
+            sendNotification(docs.expoPushToken, message.content);
+            return res.end("Successfully sent the message");
+        });
     });
 });
 

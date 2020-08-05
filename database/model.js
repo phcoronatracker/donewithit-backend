@@ -12,8 +12,9 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         minlength: 8
-    },
-    expoPushToken: String
+    }, 
+    expoPushToken: String,
+    profileImage: { type: String, default: "https://img.icons8.com/color/96/000000/gender-neutral-user.png" }
 }, { versionKey: false });
 
 const imageSchema = new mongoose.Schema({

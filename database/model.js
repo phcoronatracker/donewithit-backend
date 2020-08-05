@@ -40,6 +40,7 @@ const messageSchema = new mongoose.Schema({
     to: mongoose.Types.ObjectId,
     listing: mongoose.Types.ObjectId,
     content: String,
+    senderImage: String,
     timestamp: { type: Number, default: new Date().getTime() }
 }, { versionKey: false });
 

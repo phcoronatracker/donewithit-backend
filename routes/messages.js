@@ -19,7 +19,8 @@ router.post('/', auth, (req, res) => {
         from: req.user.userId,
         to: data.to,
         listing: data.listing,
-        content: data.content
+        content: data.content,
+        senderImage: req.user.profileImage
     });
 
     Message.create(message, (err, message) => {

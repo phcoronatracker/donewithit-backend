@@ -12,9 +12,8 @@ router.post('/', auth, (req, res) => {
         if(err) throw err;
         if(!docs) return res.status(422).send({ error: "User does not exist" });
 
-        console.log(req.body.token);
         docs.expoPushToken = req.body.token;
-        console.log(docs);
+        console.log(req.body.token);
         res.status(201).send("Sucessfully added push token");
     });
 });

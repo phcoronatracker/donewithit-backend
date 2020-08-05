@@ -18,6 +18,7 @@ router.post('/', (req, res) => {
 
         const token = jwt.sign({
             userId: docs._id,
+            userImage: docs.profileImage,
             name: docs.name,
             email
         }, process.env.SECRET);

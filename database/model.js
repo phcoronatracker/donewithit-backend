@@ -28,7 +28,6 @@ const listingSchema = new mongoose.Schema({
     price: Number,
     categoryId: Number,
     userId: mongoose.Types.ObjectId,
-    userImage: String,
     description: String,
     location: {
         latitude: mongoose.Types.Decimal128,

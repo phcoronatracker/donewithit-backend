@@ -8,8 +8,7 @@ router.get('/', auth, (req, res) => {
     Message.find({ to: req.user.userId }, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");
-
-        console.log(docs);
+        
         return res.json(docs);
     });
 });

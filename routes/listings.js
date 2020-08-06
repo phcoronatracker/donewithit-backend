@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const createThumbnail = require('../util/thumbnail');
-const { Listing, Image } = require('../database/model');
+const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
 
 router.get('/', auth, (req, res) => {
@@ -39,6 +39,15 @@ router.post('/', auth, async (req, res) => {
         if(err) throw err;
         console.log("Successfully added listing", listing._id);
         return res.end("Successfully added listing");
+    });
+});
+
+router.post('/lister-info', auth, (req, res) => {
+    User.findById(req.body.id, (err, doc) => {
+        if(err) throw err;
+        if(!doc) return res.status(422).send({ error: "User does not exist" });
+
+        res.end({ name: doc.name, image: doc.profileImage });
     });
 });
 

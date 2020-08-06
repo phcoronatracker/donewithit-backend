@@ -44,11 +44,17 @@ router.post('/', auth, async (req, res) => {
 router.post('/lister-info', auth, (req, res) => {
     console.log(req.body);
     User.findById(req.body.id, (err, doc) => {
-        console.log(doc);
         if(err) throw err;
         if(!doc) return res.status(422).send({ error: "User does not exist" });
 
-        return res.send({ name: doc.name, image: doc.profileImage });
+        Listing.find({ userId: req.body.id }, (err, docs) => {
+            if(err) throw err;
+
+            const length = docs.length;
+            if(length === 0) return res.status(400).send({ error: "User has no listing" });
+
+            return res.send({ name: doc.name, image: doc.profileImage, count: length });
+        });
     });
 });
 

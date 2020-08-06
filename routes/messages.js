@@ -9,7 +9,8 @@ router.get('/', auth, (req, res) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");
 
-        res.json(docs);
+        console.log(docs);
+        return res.json(docs);
     });
 });
 

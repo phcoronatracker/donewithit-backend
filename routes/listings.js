@@ -42,7 +42,6 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.post('/lister-info', auth, (req, res) => {
-    console.log(req.body);
     User.findById(req.body.id, (err, doc) => {
         if(err) throw err;
         if(!doc) return res.status(422).send({ error: "User does not exist" });

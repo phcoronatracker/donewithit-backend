@@ -20,7 +20,7 @@ router.post('/', auth, (req, res) => {
         to: data.to,
         listing: data.listing,
         content: data.content,
-        senderImage: req.user.profileImage
+        senderImage: req.user.userImage
     });
 
     Message.create(message, (err, message) => {

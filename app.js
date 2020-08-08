@@ -14,7 +14,10 @@ const server = Server(app);
 const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
-app.use(function(req, res, next){
+io.on('connect', (socket) => {
+    socket.emit("hello", "hehehe");
+});
+app.use(function(req, res, next) {
     req.io = io;
     next();
 });

@@ -14,8 +14,11 @@ const server = Server(app);
 const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
-app.set("io", io);
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
 
 app.use('/auth', auth);
 app.use('/listings', listings);

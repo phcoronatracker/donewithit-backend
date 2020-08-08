@@ -3,10 +3,9 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const { Message, User } = require("../database/model");
-const io = router.get("io");
 
 router.get('/', auth, (req, res) => {
-    io.emit("welcome", "hello user from messages route");
+    req.io.emit("welcome", "hello user from messages route");
     Message.find({ to: req.user.userId }, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");

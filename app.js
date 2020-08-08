@@ -12,8 +12,8 @@ const upload = require("./routes/upload");
 
 const app = express();
 const server = http.createServer(app);
-SocketSingleton(server);
 const port = process.env.PORT || 9000;
+SocketSingleton.configure(server);
 
 SocketSingleton.io.on('connect', (socket) => {
     socket.emit("hello", "hehehe");

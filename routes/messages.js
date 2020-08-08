@@ -5,7 +5,7 @@ const sendNotification = require('../util/pushNotification');
 const { Message, User, Listing } = require("../database/model");
 
 router.get('/', (req, res) => {
-    const io = req.io;
+    const io = req.app.io;
     io.of('/messages').on("connection", (socket) => {
         console.log("Message connected:", socket.id);
         socket.emit("message", "henlo po");

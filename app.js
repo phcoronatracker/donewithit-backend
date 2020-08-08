@@ -15,7 +15,7 @@ const port = process.env.PORT || 9000;
 SocketSingleton.configure(server);
 
 SocketSingleton.io.on('connect', (socket) => {
-    socket.emit("hello", "hehehe");
+    socket.emit("welcome", "Welcome user!");
 });
 
 app.use(bodyParser.json());

@@ -3,26 +3,21 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const SocketSingleton = require("../util/singleton");
-const { Message, User, Listing } = require("../database/model");
+const { Message, User } = require("../database/model");
 
 router.get('/', (req, res) => {
     const nsp = SocketSingleton.io.of('/messages');
     nsp.on("connection", (socket) => {
         console.log("Message connected:", socket.id);
         console.log(socket.handshake.headers["x-auth-token"]);
-        nsp.emit("hello", "someone connected");
     });
 
-    Listing.find({}, (err, docs) => {
+    Message.find({ to: "5f2aed44a4480900045c0614" }, (err, docs) => {
         if(err) throw err;
-        res.json(docs);
-    });
-    // Message.find({ to: req.user.userId }, (err, docs) => {
-    //     if(err) throw err;
-    //     if(!docs) return res.send("No Messages");
+        if(!docs) return res.send("No Messages");
 
-    //     return res.json(docs);
-    // });
+        nsp.emit("messages", docs);
+    });
 });
 
 router.post('/', auth, (req, res) => {

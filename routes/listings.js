@@ -5,11 +5,7 @@ const createThumbnail = require('../util/thumbnail');
 const SocketSingleton = require("../util/singleton");
 const { Listing, Image, User } = require('../database/model');
 
-router.get('/', (req, res) => {
-    SocketSingleton.io.of('/listings').on("connection", (socket) => {
-        console.log("Listing connected:", socket.id);
-        socket.emit("listing", "henlo po");
-    });
+router.get('/', auth, (req, res) => {
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);

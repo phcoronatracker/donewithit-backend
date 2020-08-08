@@ -15,12 +15,9 @@ const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
 io.on('connect', (socket) => {
-    socket.emit("hello", "hehehe");
+    console.log('User connected:', socket.id);
 });
-io.of('/messages').on("connection", (socket) => {
-    console.log("User connected:", socket.id);
-    socket.emit("messages", "henlo po");
-});
+
 app.use(function(req, res, next) {
     req.io = io;
     next();

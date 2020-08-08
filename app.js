@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require("express");
 const bodyParser = require('body-parser');
 const http = require("http");
-const SocketIO = require('socket.io');
 const SocketSingleton = require("./util/singleton");
 const auth = require('./routes/auth');
 const listings = require('./routes/listings');

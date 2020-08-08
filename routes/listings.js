@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const createThumbnail = require('../util/thumbnail');
-const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
+const createThumbnail = require('../util/thumbnail');
 const SocketSingleton = require("../util/singleton");
+const { Listing, Image, User } = require('../database/model');
 
 router.get('/', (req, res) => {
-    SocketSingleton.io.of('/messages').on("connection", (socket) => {
+    SocketSingleton.io.of('/listings').on("connection", (socket) => {
         console.log("Listing connected:", socket.id);
         socket.emit("listing", "henlo po");
     });

@@ -14,8 +14,10 @@ const server = Server(app);
 const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
-app.io = io;
-
+app.use(function(req, res, next){
+    req.io = io;
+    next();
+});
 app.use(bodyParser.json());
 
 app.use('/auth', auth);

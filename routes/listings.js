@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 const SocketSingleton = require("../util/singleton");
 
 router.get('/', (req, res) => {
-    SocketSingleton.io.of('/listings').on("connection", (socket) => {
+    SocketSingleton.io.of('/messages').on("connection", (socket) => {
         console.log("Listing connected:", socket.id);
         socket.emit("listing", "henlo po");
     });

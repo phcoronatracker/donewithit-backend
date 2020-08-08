@@ -6,7 +6,7 @@ const { Message, User, Listing } = require("../database/model");
 const SocketSingleton = require("../util/singleton");
 
 router.get('/', (req, res) => {
-    SocketSingleton.io.of('/messages').on("connection", (socket) => {
+    SocketSingleton.io.of('/ewan').on("connection", (socket) => {
         console.log("Message connected:", socket.id);
         socket.emit("message", "henlo po");
     });

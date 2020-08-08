@@ -5,7 +5,7 @@ const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
 
 router.get('/', (req, res) => {
-    const io = req.io;
+    const io = req.app.io;
     io.of('/listings').on("connection", (socket) => {
         console.log("User connected:", socket.id);
         socket.emit("listings", "henlo po");

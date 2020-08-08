@@ -17,6 +17,14 @@ const port = process.env.PORT || 9000;
 io.on('connect', (socket) => {
     console.log('User connected:', socket.id);
 });
+io.use((socket, next) => {
+    let clientId = socket.handshake.headers['x-clientid'];
+    console.log("ID:", clientId)
+    if (isValid(clientId)) {
+      return next();
+    }
+    return next(new Error('authentication error'));
+});
 
 app.use(function(req, res, next) {
     req.io = io;

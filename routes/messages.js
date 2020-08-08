@@ -2,13 +2,18 @@ const express = require('express');
 const router = express.Router();
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
-const { Message, User } = require("../database/model");
+const { Message, User, Listing } = require("../database/model");
 
 router.get('/', (req, res) => {
     const io = req.io;
     io.of('/messages').on("connection", (socket) => {
-        console.log("User connected for messages:", socket.id);
+        console.log("Message connected:", socket.id);
         socket.emit("message", "henlo po");
+    });
+
+    Listing.find({}, (err, docs) => {
+        if(err) throw err;
+        res.json(docs);
     });
     // Message.find({ to: req.user.userId }, (err, docs) => {
     //     if(err) throw err;
@@ -16,8 +21,6 @@ router.get('/', (req, res) => {
 
     //     return res.json(docs);
     // });
-
-    res.send({ message: "Hello" });
 });
 
 router.post('/', auth, (req, res) => {

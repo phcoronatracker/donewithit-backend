@@ -24,7 +24,8 @@ app.use('/messages', messages);
 app.use('/upload', upload);
 
 io.on('connection', (socket) => {
-    console.log("A user connected:", socket);
+    socket.emit("welcome", "hello from socket io with express");
+    console.log("A user connected");
 });
 
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

@@ -20,10 +20,7 @@ io.on('connect', (socket) => {
 io.use((socket, next) => {
     let clientId = socket.handshake.headers['x-clientid'];
     console.log("ID:", clientId)
-    if (isValid(clientId)) {
-      return next();
-    }
-    return next(new Error('authentication error'));
+    return next();
 });
 
 app.use(function(req, res, next) {

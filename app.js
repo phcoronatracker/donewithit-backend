@@ -15,10 +15,6 @@ const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
 app.io = io;
-io.on("connect", (socket) => {
-    console.log("User connected", socket.id);
-    socket.emit("welcome", "Welcome from main route");
-});
 
 app.use(bodyParser.json());
 
@@ -29,7 +25,7 @@ app.use('/messages', messages);
 app.use('/upload', upload);
 
 app.get("/hehe", (req, res) => {
-    io.emit("hehe", "HEHEHEHE");
-})
+    req.app.io.emit("hehe", "heheheh");
+});
 
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

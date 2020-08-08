@@ -5,7 +5,11 @@ const sendNotification = require('../util/pushNotification');
 const { Message, User } = require("../database/model");
 
 router.get('/', auth, (req, res) => {
-    req.io.emit("welcome", "hello user from messages route");
+    const io = req.io
+
+    io.on("connect", (socket) => {
+        socket.emit("welcome", "HELLOOOOO");
+    });
     Message.find({ to: req.user.userId }, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");

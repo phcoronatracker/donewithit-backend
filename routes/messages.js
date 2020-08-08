@@ -7,21 +7,11 @@ const sendNotification = require('../util/pushNotification');
 const SocketSingleton = require("../util/singleton");
 const { Message, User, Listing } = require("../database/model");
 
-SocketSingleton.io.use((socket, next) => {
-    const token = socket.handshake.headers['x-client-token'];
-    console.log(token);
-    next();
-
-    // try {
-    //     const payload = jwt.verify(token, process.env.SECRET);
-    //     next();
-    // } catch (err) {
-    //     next(new Error({ error: 'Invalid token' }));
-    // }
-});
-
 router.get('/', (req, res) => {
     SocketSingleton.io.of('/messages').on("connection", (socket) => {
+        const token = socket.handshake.headers['x-client-token'];
+        console.log("Token:", token);
+
         console.log("Message connected:", socket.id);
         socket.emit("message", "henlo po");
     });

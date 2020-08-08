@@ -26,4 +26,8 @@ app.use('/expo-push-token', expoToken);
 app.use('/messages', messages);
 app.use('/upload', upload);
 
+io.on("connect", (socket) => {
+    console.log("User connected !!!", socket.id);
+})
+
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

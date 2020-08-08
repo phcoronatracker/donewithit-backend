@@ -6,9 +6,7 @@ const { Message, User } = require("../database/model");
 const io = router.get("io");
 
 router.get('/', auth, (req, res) => {
-    io.on("connection", (socket) => {
-        socket.emit("welcome", "hi user");
-    });
+    io.emit("welcome", "hello user from messages route");
     Message.find({ to: req.user.userId }, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");

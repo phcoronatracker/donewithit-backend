@@ -25,9 +25,9 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 
 app.use('/auth', auth);
+app.use('/messages', messages);
 app.use('/listings', listings);
 app.use('/expo-push-token', expoToken);
-app.use('/messages', messages);
 app.use('/upload', upload);
 
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

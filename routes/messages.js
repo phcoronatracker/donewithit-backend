@@ -10,8 +10,6 @@ const { Message, User, Listing } = require("../database/model");
 SocketSingleton.io.use((socket, next) => {
     const token = socket.handshake.headers['x-client-token'];
     console.log(token);
-    if (!token) return next(new Error({ error: 'No token' }));
-
     next();
 
     // try {

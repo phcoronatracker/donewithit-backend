@@ -14,8 +14,7 @@ const server = Server(app);
 const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
-app.io = io;
-
+app.set("io", io);
 app.use(bodyParser.json());
 
 app.use('/auth', auth);
@@ -23,7 +22,5 @@ app.use('/listings', listings);
 app.use('/expo-push-token', expoToken);
 app.use('/messages', messages);
 app.use('/upload', upload);
-
-io.on('connection', () => console.log("A user connected"));
 
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

@@ -14,14 +14,6 @@ const server = Server(app);
 const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
-io.use((socket, next) => {
-    let clientId = socket.handshake.headers['x-clientid'];
-    console.log("ID:", clientId);
-    if(clientId) return next();
-
-    return new Error("no id");
-});
-
 app.use(function(req, res, next) {
     req.io = io;
     next();

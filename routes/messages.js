@@ -8,6 +8,7 @@ router.get('/', auth, (req, res) => {
     const io = req.io
 
     io.on("connect", (socket) => {
+        console.log("USER CONNECTED WHOOO");
         socket.emit("welcome", "HELLOOOOO");
     });
     Message.find({ to: req.user.userId }, (err, docs) => {

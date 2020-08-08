@@ -20,7 +20,7 @@ io.on('connect', (socket) => {
 io.of('/messages').on("connection", (socket) => {
     console.log("User connected:", socket.id);
     socket.emit("messages", "henlo po");
-})
+});
 app.use(function(req, res, next) {
     req.io = io;
     next();

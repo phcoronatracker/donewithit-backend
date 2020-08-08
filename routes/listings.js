@@ -6,9 +6,9 @@ const auth = require('../middleware/auth');
 
 router.get('/', (req, res) => {
     const io = req.io;
-    io.on("connection", (socket) => {
-        console.log("Socket connected:", socket.id);
-        socket.emit("listing", "Welcome from listing route. Unprotected api");
+    io.of('/listings').on("connection", (socket) => {
+        console.log("User connected:", socket.id);
+        socket.emit("listings", "henlo po");
     });
 
     Listing.find({}, (err, docs) => {

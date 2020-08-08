@@ -5,7 +5,7 @@ const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
 
 router.get('/', (req, res) => {
-    const socket = req.app.io;
+    const socket = req.io.sockets;
     socket.emit("listing", "Welcome from listing route. Unprotected api");
 
     Listing.find({}, (err, docs) => {

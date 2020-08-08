@@ -3,6 +3,7 @@ const router = express.Router();
 const createThumbnail = require('../util/thumbnail');
 const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
+const SocketSingleton = require("../util/singleton");
 
 router.get('/', (req, res) => {
     SocketSingleton.io.of('/listings').on("connection", (socket) => {

@@ -9,9 +9,8 @@ router.get('/', (req, res) => {
     const nsp = SocketSingleton.io.of('/messages');
     nsp.on("connection", (socket) => {
         console.log("Message connected:", socket.id);
+        console.log(socket.handshake.headers["x-auth-token"]);
         nsp.emit("hello", "someone connected");
-        let clientId = socket.handshake.headers;
-        console.log(clientId);
     });
 
     Listing.find({}, (err, docs) => {

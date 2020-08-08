@@ -12,8 +12,9 @@ const upload = require("./routes/upload");
 const app = express();
 const server = Server(app);
 const io = SocketIO(server);
-
 const port = process.env.PORT || 9000;
+
+app.io = io;
 
 app.use(bodyParser.json());
 
@@ -23,9 +24,6 @@ app.use('/expo-push-token', expoToken);
 app.use('/messages', messages);
 app.use('/upload', upload);
 
-io.on('connection', (socket) => {
-    socket.emit("welcome", "hello from socket io with express");
-    console.log("A user connected");
-});
+io.on('connection', () => console.log("A user connected"));
 
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

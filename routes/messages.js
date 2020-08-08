@@ -7,13 +7,10 @@ const { Message, User, Listing } = require("../database/model");
 
 router.get('/', (req, res) => {
     const nsp = SocketSingleton.io.of('/messages');
-    nsp.use((socket, next) => {
-        next();
-    });
     nsp.on("connection", (socket) => {
         console.log("Message connected:", socket.id);
+        nsp.emit("hello", "someone connected");
     });
-    nsp.emit("hello", "someone connected");
 
     Listing.find({}, (err, docs) => {
         if(err) throw err;

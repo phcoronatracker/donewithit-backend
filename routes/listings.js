@@ -5,6 +5,10 @@ const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
 
 router.get('/', (req, res) => {
+    SocketSingleton.io.of('/listings').on("connection", (socket) => {
+        console.log("Listing connected:", socket.id);
+        socket.emit("listing", "henlo po");
+    });
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);

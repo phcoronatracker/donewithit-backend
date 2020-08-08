@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     nsp.on("connection", (socket) => {
         console.log("Message connected:", socket.id);
         nsp.emit("hello", "someone connected");
-        let clientId = socket.handshake;
+        let clientId = socket.handshake.headers;
         console.log(clientId);
     });
 

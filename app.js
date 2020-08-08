@@ -18,9 +18,6 @@ app.io = io;
 io.on("connect", (socket) => {
     console.log("User connected", socket.id);
     socket.emit("welcome", "Welcome from main route");
-    socket.on("message", (data) => {
-        io.sockets.emit("message", data);
-    });
 });
 
 app.use(bodyParser.json());

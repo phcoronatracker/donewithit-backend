@@ -4,19 +4,18 @@ const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const { Message, User } = require("../database/model");
 
-router.get('/', auth, (req, res) => {
+router.get('/', (req, res) => {
     const io = req.io
-    Message.find({ to: req.user.userId }, (err, docs) => {
-        if(err) throw err;
-        if(!docs) return res.send("No Messages");
-        
-        io.of('/messages').on("connection", (socket) => {
-            console.log("Getting messages:", socket.id);
-            socket.emit("messages", docs)
-        });
-
-        return res.json(docs);
+    io.of('/messages').on("connection", (socket) => {
+        console.log("Getting messages:", socket.id);
+        socket.emit("messages", "hehe")
     });
+    // Message.find({ to: req.user.userId }, (err, docs) => {
+    //     if(err) throw err;
+    //     if(!docs) return res.send("No Messages");
+
+    //     return res.json(docs);
+    // });
 });
 
 router.post('/', auth, (req, res) => {

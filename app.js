@@ -14,20 +14,21 @@ const server = Server(app);
 const io = SocketIO(server);
 const port = process.env.PORT || 9000;
 
-app.use(bodyParser.json());
-app.use((req, res, next) => {
-    req.io = io;
-    next();
+app.io = io;
+io.on("connect", (socket) => {
+    console.log("User connected", socket.id);
+    socket.emit("welcome", "Welcome from main route");
+    socket.on("message", (data) => {
+        io.sockets.emit("message", data);
+    });
 });
+
+app.use(bodyParser.json());
 
 app.use('/auth', auth);
 app.use('/listings', listings);
 app.use('/expo-push-token', expoToken);
 app.use('/messages', messages);
 app.use('/upload', upload);
-
-io.on("connect", (socket) => {
-    console.log("User connected !!!", socket.id);
-})
 
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

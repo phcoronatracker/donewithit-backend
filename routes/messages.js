@@ -1,7 +1,5 @@
-require("dotenv").config();
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const SocketSingleton = require("../util/singleton");
@@ -9,9 +7,6 @@ const { Message, User, Listing } = require("../database/model");
 
 router.get('/', (req, res) => {
     SocketSingleton.io.of('/messages').on("connection", (socket) => {
-        const token = socket.handshake.headers['x-client-token'];
-        console.log("Token:", token);
-
         console.log("Message connected:", socket.id);
         socket.emit("message", "henlo po");
     });

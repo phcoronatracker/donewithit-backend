@@ -4,7 +4,10 @@ const createThumbnail = require('../util/thumbnail');
 const { Listing, Image, User } = require('../database/model');
 const auth = require('../middleware/auth');
 
-router.get('/', auth, (req, res) => {
+router.get('/', (req, res) => {
+    const socket = req.app.io;
+    socket.emit("listing", "Welcome from listing route. Unprotected api");
+
     Listing.find({}, (err, docs) => {
         if(err) throw err;
         res.json(docs);

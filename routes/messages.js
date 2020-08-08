@@ -3,10 +3,10 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const { Message, User, Listing } = require("../database/model");
+const SocketSingleton = require("../util/singleton");
 
 router.get('/', (req, res) => {
-    const io = req.app.io;
-    io.of('/messages').on("connection", (socket) => {
+    SocketSingleton.io.of('/messages').on("connection", (socket) => {
         console.log("Message connected:", socket.id);
         socket.emit("message", "henlo po");
     });

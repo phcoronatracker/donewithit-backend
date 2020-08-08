@@ -5,10 +5,10 @@ const sendNotification = require('../util/pushNotification');
 const { Message, User } = require("../database/model");
 
 router.get('/', (req, res) => {
-    const io = req.io
+    const io = req.io;
     io.of('/messages').on("connection", (socket) => {
-        console.log("Getting messages:", socket.id);
-        socket.emit("messages", "hehe")
+        console.log("User connected for messages:", socket.id);
+        socket.emit("message", "henlo po");
     });
     // Message.find({ to: req.user.userId }, (err, docs) => {
     //     if(err) throw err;
@@ -16,6 +16,8 @@ router.get('/', (req, res) => {
 
     //     return res.json(docs);
     // });
+
+    res.send({ message: "Hello" });
 });
 
 router.post('/', auth, (req, res) => {

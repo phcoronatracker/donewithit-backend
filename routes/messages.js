@@ -1,9 +1,26 @@
+require("dotenv").config();
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const SocketSingleton = require("../util/singleton");
 const { Message, User, Listing } = require("../database/model");
+
+SocketSingleton.io.use((socket, next) => {
+    const token = socket.handshake.headers['x-client-token'];
+    console.log(token);
+    if (!token) return next(new Error({ error: 'No token' }));
+
+    next();
+
+    // try {
+    //     const payload = jwt.verify(token, process.env.SECRET);
+    //     next();
+    // } catch (err) {
+    //     next(new Error({ error: 'Invalid token' }));
+    // }
+});
 
 router.get('/', (req, res) => {
     SocketSingleton.io.of('/messages').on("connection", (socket) => {

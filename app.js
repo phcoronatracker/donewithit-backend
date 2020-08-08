@@ -24,8 +24,4 @@ app.use('/expo-push-token', expoToken);
 app.use('/messages', messages);
 app.use('/upload', upload);
 
-app.get("/hehe", (req, res) => {
-    req.app.io.emit("hehe", "heheheh");
-});
-
 server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));

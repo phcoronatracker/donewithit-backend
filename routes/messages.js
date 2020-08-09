@@ -62,9 +62,9 @@ router.get('/real-time', (req, res) => {
             if(!docs) return;
 
             const message = docs.slice(docs.length, messageCount);
-            if(!message) return;
-
-            socket.emit("new-message", message);
+            if(message) {
+                socket.emit("new-message", message);
+            }
         });
     });
 

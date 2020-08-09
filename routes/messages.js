@@ -72,8 +72,6 @@ router.get('/real-time', (req, res) => {
     });
 
     nsp.on("error", (error) => console.log("Error connecting to messages:", error));
-
-    res.json({ error: "Bad Request" });
 });
 
 module.exports = router;

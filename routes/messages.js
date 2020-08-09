@@ -45,33 +45,27 @@ router.get('/real-time', (req, res) => {
     nsp.on("connection", (socket) => {
         console.log("User connected:", socket.id);
 
-        const token = socket.handshake.headers["x-clientid"];
+        const token = socket.handshake.headers["x-client-token"];
         console.log("Token:", token);
 
-        Message.find({ to: token }, (err, docs) => {
-            if(err) throw err;
-            if(!docs) return res.send("No Messages");
-    
-            socket.emit("messages", docs);
-        });
-        // const data = verify(token);
+        const data = verify(token);
 
-        // if(!data) return res.status(400).send({ error: "Bad request" });
+        if(!data) return res.status(400).send({ error: "Bad request" });
 
-        // console.log("Data:", data);
-        const length = socket.handshake.headers["x-message-len"];
+        console.log("Data:", data);
+        const messageCount = socket.handshake.headers["x-message-len"];
         console.log("Length:", length);
-        // const clientID = data.userId;
+        const clientID = data.userId;
 
-        // Message.find({ to: clientID }, (err, docs) => {
-        //     if(err) throw err;
-        //     if(!docs) return;
+        Message.find({ to: clientID }, (err, docs) => {
+            if(err) throw err;
+            if(!docs) return;
 
-        //     const message = docs.slice(docs.length, length);
-        //     if(!message) return;
+            const message = docs.slice(docs.length, messageCount);
+            if(!message) return;
 
-        //     socket.emit("new-message", message);
-        // });
+            socket.emit("new-message", message);
+        });
     });
 
     nsp.on('disconnect', () => {

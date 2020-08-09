@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
         console.log("Message connected:", socket.id);
         console.log(socket.handshake.headers["x-auth-token"]);
     });
-    
+
     Message.find({ to: "5f2aed44a4480900045c0614" }, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");

@@ -54,7 +54,7 @@ router.get('/real-time', (req, res) => {
 
         console.log("Data:", data);
         const messageCount = socket.handshake.headers["x-message-len"];
-        console.log("Length:", length);
+        console.log("Length:", messageCount);
         const clientID = data.userId;
 
         Message.find({ to: clientID }, (err, docs) => {

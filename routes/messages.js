@@ -52,7 +52,7 @@ router.get('/real-time', (req, res) => {
             if(err) throw err;
             if(!docs) return res.send("No Messages");
     
-            socket.to(socket.id).emit("messages", docs);
+            socket.emit("messages", docs);
         });
         // const data = verify(token);
 

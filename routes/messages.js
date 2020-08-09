@@ -36,7 +36,9 @@ router.get('/real-time', (req, res) => {
 
     nsp.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
-    });    
+    });
+
+    nsp.on("error", (error) => console.log("Error connecting to messages:", error));
 
 });
 

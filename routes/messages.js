@@ -45,15 +45,22 @@ router.get('/real-time', (req, res) => {
     nsp.on("connection", (socket) => {
         console.log("User connected:", socket.id);
 
-        // const token = socket.handshake.headers["x-clientid"];
-        // console.log("Token:", token);
+        const token = socket.handshake.headers["x-clientid"];
+        console.log("Token:", token);
+
+        Message.find({ to: token }, (err, docs) => {
+            if(err) throw err;
+            if(!docs) return res.send("No Messages");
+    
+            socket.emit("messages", docs);
+        });
         // const data = verify(token);
 
         // if(!data) return res.status(400).send({ error: "Bad request" });
 
         // console.log("Data:", data);
-        // const length = socket.handshake.headers["x-message-len"];
-        // console.log("Length:", length);
+        const length = socket.handshake.headers["x-message-len"];
+        console.log("Length:", length);
         // const clientID = data.userId;
 
         // Message.find({ to: clientID }, (err, docs) => {

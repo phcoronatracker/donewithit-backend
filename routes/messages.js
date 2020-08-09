@@ -4,24 +4,48 @@ const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
 const SocketSingleton = require("../util/singleton");
 const { Message, User } = require("../database/model");
+const verify = require("../util/tokenVerify");
 
-router.get('/', (req, res) => {
-    const nsp = SocketSingleton.io.of('/messages');
+router.get('/real-time', (req, res) => {
+    const nsp = SocketSingleton.io.of('/messages/real-time');
 
-    Message.find({ to: "5f2aed44a4480900045c0614" }, (err, docs) => {
+    nsp.on("connection", (socket) => {
+        console.log("User connected:", socket.id);
+
+        const token = socket.handshake.headers["x-clientid"];
+        console.log("Token:", token);
+        const data = verify(token);
+
+        if(!data) return res.status(400).send({ error: "Bad request" });
+
+        console.log("Data:", data);
+        const length = socket.handshake.headers["x-message-len"];
+        console.log("Length:", length);
+        const clientID = data.userId;
+
+        Message.find({ to: clientID }, (err, docs) => {
+            if(err) throw err;
+            if(!docs) return;
+
+            const message = docs.slice(docs.length, length);
+            if(!message) return;
+
+            socket.emit("new-message", message);
+        });
+    });
+
+    nsp.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });    
+
+});
+
+router.get('/', auth, (req, res) => {
+    Message.find({ to: req.user.userId }, (err, docs) => {
         if(err) throw err;
         if(!docs) return res.send("No Messages");
 
-        nsp.on("connection", (socket) => {
-            console.log("User connected:", socket.id);
-            console.log(socket.handshake.headers["x-auth-token"]);
-            
-            socket.emit("messages", docs);
-
-            socket.on('disconnect', () => {
-                console.log('User disconnected:', socket.id);
-            });
-        });
+        return res.json(docs);
     });
 });
 

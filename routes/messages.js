@@ -44,7 +44,9 @@ router.get('/socket', (req, res) => {
     io.of('/messages/socket').on("connection", (socket) => {
         console.log("User connected:", socket.id);
         
-        socket.emit("Welcome", `Welcome user ${socket.id}`);
+        socket.on("user-data", data => {
+            console.log(data);
+        })
     });
 });
 

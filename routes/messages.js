@@ -38,9 +38,18 @@ router.post('/', auth, (req, res) => {
     });
 });
 
+router.get('/socket', (req, res) => {
+    const io = SocketSingleton.io;
+
+    io.of('/messages/socket').on("connection", (socket) => {
+        console.log("User connected:", socket.id);
+        
+        io.to(socket.id).emit("Welcome", `Welcome user ${socket.id}`);
+    });
+});
+
 router.get('/real-time', (req, res) => {
-    
-    const nsp = SocketSingleton.io.of('/messages/real-time');
+    const nsp = SocketSingleton.io.of("/messages");
 
     nsp.on("connection", (socket) => {
         console.log("User connected:", socket.id);

@@ -44,12 +44,12 @@ router.get('/socket', (req, res) => {
     io.of('/messages/socket').on("connection", (socket) => {
         console.log("User connected:", socket.id);
         
-        io.to(socket.id).emit("Welcome", `Welcome user ${socket.id}`);
+        socket.emit("Welcome", `Welcome user ${socket.id}`);
     });
 });
 
 router.get('/real-time', (req, res) => {
-    const nsp = SocketSingleton.io.of("/messages");
+    const nsp = SocketSingleton.io.of("/messages/real-time");
 
     nsp.on("connection", (socket) => {
         console.log("User connected:", socket.id);

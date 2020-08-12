@@ -25,15 +25,15 @@ router.post('/', auth, (req, res) => {
         senderName: req.user.name
     });
 
+    req.app.io.on("connect", (socket) => {
+        socket.broadcast.emit("new-message", message);
+    });
+
     Message.create(message, (err, message) => {
         if(err) throw err;
 
-        req.app.io.on("connect", (socket) => {
-            socket.emit("new-message", message);
-        });
+        
         User.findById(data.to, (error, docs) => {
-            if(error) throw error;
-
             sendNotification(docs.expoPushToken, req.user.name, message.content);
             return res.end("Successfully sent the message");
         });

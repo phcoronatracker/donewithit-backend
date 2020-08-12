@@ -25,6 +25,10 @@ router.post('/', auth, (req, res) => {
         senderName: req.user.name
     });
 
+    req.app.io.on("connect", socket => {
+        socket.broadcast.emit("new-message", messageDetails);
+    });
+
     Message.create(messageDetails, (err, message) => {
         if(err) throw err;
         

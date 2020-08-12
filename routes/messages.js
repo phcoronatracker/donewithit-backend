@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const auth = require("../middleware/auth");
 const sendNotification = require('../util/pushNotification');
-const SocketSingleton = require("../util/singleton");
 const { Message, User } = require("../database/model");
 const verify = require("../util/tokenVerify");
 
@@ -29,6 +28,7 @@ router.post('/', auth, (req, res) => {
     Message.create(message, (err, message) => {
         if(err) throw err;
 
+        req.app.io.emit("new-message", message);
         User.findById(data.to, (error, docs) => {
             if(error) throw error;
 
@@ -38,54 +38,42 @@ router.post('/', auth, (req, res) => {
     });
 });
 
-router.get('/socket', (req, res) => {
-    const io = SocketSingleton.io;
+// router.get('/real-time', (req, res) => {
+//     const nsp = SocketSingleton.io.of("/messages/real-time");
 
-    io.of('/messages/socket').on("connection", (socket) => {
-        console.log("User connected:", socket.id);
-        
-        socket.on("user-data", data => {
-            console.log(data);
-        })
-    });
-});
+//     nsp.on("connection", (socket) => {
+//         console.log("User connected:", socket.id);
 
-router.get('/real-time', (req, res) => {
-    const nsp = SocketSingleton.io.of("/messages/real-time");
+//         const token = socket.handshake.headers["x-client-token"];
+//         console.log("Token:", token);
 
-    nsp.on("connection", (socket) => {
-        console.log("User connected:", socket.id);
+//         const data = verify(token);
 
-        const token = socket.handshake.headers["x-client-token"];
-        console.log("Token:", token);
+//         if(!data) return res.status(400).send({ error: "Bad request" });
 
-        const data = verify(token);
+//         console.log("Data:", data);
+//         const messageCount = socket.handshake.headers["x-message-len"];
+//         console.log("Length:", messageCount);
+//         const clientID = data.userId;
 
-        if(!data) return res.status(400).send({ error: "Bad request" });
+//         Message.find({ to: clientID }, (err, docs) => {
+//             if(err) throw err;
+//             if(!docs) return;
 
-        console.log("Data:", data);
-        const messageCount = socket.handshake.headers["x-message-len"];
-        console.log("Length:", messageCount);
-        const clientID = data.userId;
+//             const message = docs.slice(docs.length, messageCount);
+//             if(message) {
+//                 socket.emit("new-message", message);
+//             }
+//         });
+//     });
 
-        Message.find({ to: clientID }, (err, docs) => {
-            if(err) throw err;
-            if(!docs) return;
+//     nsp.on('disconnect', () => {
+//         console.log('User disconnected:', socket.id);
+//     });
 
-            const message = docs.slice(docs.length, messageCount);
-            if(message) {
-                socket.emit("new-message", message);
-            }
-        });
-    });
+//     nsp.on("error", (error) => console.log("Error connecting to messages:", error));
 
-    nsp.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-    });
-
-    nsp.on("error", (error) => console.log("Error connecting to messages:", error));
-
-    res.send({ error: "Bad request" });
-});
+//     res.send({ error: "Bad request" });
+// });
 
 module.exports = router;

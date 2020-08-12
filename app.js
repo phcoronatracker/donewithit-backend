@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require("express");
 const bodyParser = require('body-parser');
-const http = require("http");
-const SocketSingleton = require("./util/singleton");
+const socketIO = require("socket.io");
+const { Server } = require("http");
 const auth = require('./routes/auth');
 const listings = require('./routes/listings');
 const expoToken = require("./routes/expoPushToken");
@@ -10,12 +10,14 @@ const messages = require('./routes/messages');
 const upload = require("./routes/upload");
 
 const app = express();
-const server = http.createServer(app);
+const server = Server(app);
+const io = socketIO(server);
 const port = process.env.PORT || 9000;
-SocketSingleton.configure(server);
 
-SocketSingleton.io.on('connect', (socket) => {
-    socket.emit("welcome", "Welcome user!");
+app.io = io;
+
+io.on("connect", (socket) => {
+    console.log("User conencted:", socket);
 });
 
 app.use(bodyParser.json());

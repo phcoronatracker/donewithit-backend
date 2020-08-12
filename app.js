@@ -17,7 +17,7 @@ const port = process.env.PORT || 9000;
 app.io = io;
 
 io.on("connect", (socket) => {
-    console.log("User conencted:", socket);
+    console.log("User conencted:", socket.id);
 });
 
 app.use(bodyParser.json());

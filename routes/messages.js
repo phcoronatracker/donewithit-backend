@@ -16,7 +16,7 @@ router.get('/', auth, (req, res) => {
 
 router.post('/', auth, (req, res) => {
     const data = req.body;
-    const message = new Message({
+    const messageDetails = new Message({
         from: req.user.userId,
         to: data.to,
         listing: data.listing,
@@ -25,13 +25,8 @@ router.post('/', auth, (req, res) => {
         senderName: req.user.name
     });
 
-    req.app.io.on("connect", (socket) => {
-        socket.broadcast.emit("new-message", message);
-    });
-
-    Message.create(message, (err, message) => {
+    Message.create(messageDetails, (err, message) => {
         if(err) throw err;
-
         
         User.findById(data.to, (error, docs) => {
             sendNotification(docs.expoPushToken, req.user.name, message.content);

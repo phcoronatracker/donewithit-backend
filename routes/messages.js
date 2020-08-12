@@ -28,7 +28,9 @@ router.post('/', auth, (req, res) => {
     Message.create(message, (err, message) => {
         if(err) throw err;
 
-        req.app.io.emit("new-message", message);
+        req.app.io.on("connect", (socket) => {
+            socket.emit("new-message", message);
+        });
         User.findById(data.to, (error, docs) => {
             if(error) throw error;
 

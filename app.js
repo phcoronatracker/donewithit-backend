@@ -51,7 +51,7 @@ io.on("connect", (socket) => {
         const sender = message.user, receiver = message.receiver
 
         // Finding with the id of the current user
-        User.findById(sender._id, (err, docs) => {
+        User.findById(sender._id, async (err, docs) => {
             if(err) throw err;
             if(!docs) return;
 
@@ -89,7 +89,7 @@ io.on("connect", (socket) => {
             await docs.save();
         });
 
-        User.findById(receiver._id, (err, docs) => {
+        User.findById(receiver._id, async (err, docs) => {
             if(err) throw err;
             if(!docs) return;
 

@@ -67,7 +67,6 @@ io.on("connect", (socket) => {
                         $each: [message],
                         $position: 0
                     });
-                    break;
                 }
             });
 
@@ -106,7 +105,6 @@ io.on("connect", (socket) => {
                         $each: [message],
                         $position: 0
                     });
-                    break;
                 }
             });
 

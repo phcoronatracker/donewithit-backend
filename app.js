@@ -37,12 +37,12 @@ io.on("connect", (socket) => {
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
-            if(!docs) return socket.emit("new-connection", null);
+            if(!docs) socket.emit("new-connection", null);
 
             docs.connections.forEach(connection => {
                 // Connection exists. Loading previous chats
                 if(connection.senderID === data.receiverID) 
-                    return socket.emit("new-connection", connection.messages);
+                    socket.emit("new-connection", connection.messages);
             });
         });
     });

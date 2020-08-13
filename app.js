@@ -19,6 +19,7 @@ const port = process.env.PORT || 9000;
 io.on("connect", (socket) => {
     console.log("User conencted:", socket.id);
     socket.on("get-connections", id => {
+        console.log(id);
         if(!id) return;
 
         User.findById(id, (err, docs) => {

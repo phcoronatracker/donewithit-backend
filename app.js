@@ -19,8 +19,8 @@ const port = process.env.PORT || 9000;
 io.on("connect", (socket) => {
     console.log("User conencted:", socket.id);
     socket.on("get-connections", id => {
-        console.log(id);
         if(!id) return;
+        console.log(id);
 
         User.findById(id, (err, docs) => {
             if(err) throw err;
@@ -32,6 +32,7 @@ io.on("connect", (socket) => {
 
     socket.on("new-connection", id => {
         if(!id) return;
+        console.log(id);
         
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {

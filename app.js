@@ -37,10 +37,11 @@ io.on("connect", (socket) => {
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
-            if(!docs) {
-                console.log("No connections");
+            if(!docs || !docs.connections) {
+                console.log("No User Exist");
                 io.to(socket.id).emit("Welcome", "HELLOOO");
                 io.to(socket.id).emit("new-connection", []);
+                return;
             }
 
             docs.connections.forEach(connection => {

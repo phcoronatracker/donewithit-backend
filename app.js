@@ -33,8 +33,9 @@ io.on("connect", (socket) => {
         }); 
     });
 
-    socket.on("new-connection", id => {
+    socket.on("new-connection", ({ id, receiverID }) => {
         if(!id) return;
+        console.log("New Connection:", id);
         
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {

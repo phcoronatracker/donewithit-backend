@@ -26,7 +26,7 @@ io.on("connect", (socket) => {
             if(err) throw err;
             if(!docs) return;
 
-            return socket.broadcast.emit("get-connections", docs.connections);
+            return io.to(socket.id).emit("get-connections", docs.connections);
         }); 
     });
 
@@ -37,12 +37,12 @@ io.on("connect", (socket) => {
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
-            if(!docs) return socket.emit("new-connection", []);
+            if(!docs) return io.to(socket.id).emit("new-connection", []);
 
             docs.connections.forEach(connection => {
                 // Connection exists. Loading previous chats
                 if(connection.senderID === data.receiverID) 
-                    return socket.emit("new-connection", connection.messages);
+                    return io.to(socket.id).emit("new-connection", connection.messages);
             });
         });
     });
@@ -130,6 +130,11 @@ io.on("connect", (socket) => {
 
             sendNotification(docs.expoPushToken, sender.name, message.text);
         });
+    });
+    
+    socket.on("disconnect", (reason) => {
+        console.log("User disconnected:", socket.id);
+        console.log("Reason:", reason);
     });
 });
 

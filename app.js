@@ -27,7 +27,7 @@ io.on("connect", (socket) => {
             if(!docs) return;
 
             if(!docs.connections || docs.connections.length === 0) 
-                return io.to(socket.id).emit("get-connections", [])
+                return io.to(socket.id).emit("get-connections", []);
 
             return io.to(socket.id).emit("get-connections", docs.connections);
         }); 

@@ -49,6 +49,8 @@ io.on("connect", (socket) => {
                 // Connection exists. Loading previous chats
                 if(connection.senderID === receiverID) 
                     return io.to(socket.id).emit("new-connection", connection.messages);
+                else
+                    return io.to(socket.id).emit("new-connection", []);
             });
         });
     });

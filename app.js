@@ -32,21 +32,14 @@ io.on("connect", (socket) => {
 
     socket.on("new-connection", id => {
         if(!id) return;
-        console.log(id);
         
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
-            if(!docs) {
-                console.log("No User Exist");
-                return io.to(socket.id).emit("new-connection", []);
-            }
+            if(!docs) return;
 
-            if(!docs.connections || docs.connections.length === 0) {
-                console.log("No connections");
-                io.to(socket.id).emit("Welcome", "HELLOOO");
+            if(!docs.connections || docs.connections.length === 0) 
                 return io.to(socket.id).emit("new-connection", []);
-            }
 
             docs.connections.forEach(connection => {
                 // Connection exists. Loading previous chats
@@ -58,6 +51,8 @@ io.on("connect", (socket) => {
 
     socket.on("new-message", message => {
         if(!message) return;
+
+        socket.emit("new-message", [message]);
 
         const sender = message.user, receiver = message.receiver
 

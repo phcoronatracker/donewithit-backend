@@ -47,7 +47,7 @@ io.on("connect", (socket) => {
 
             docs.connections.forEach(connection => {
                 // Connection exists. Loading previous chats
-                if(connection.senderID === data.receiverID) 
+                if(connection.senderID === receiverID) 
                     return io.to(socket.id).emit("new-connection", connection.messages);
             });
         });

@@ -17,7 +17,7 @@ const io = socketIO(server);
 const port = process.env.PORT || 9000;
 
 io.on("connect", (socket) => {
-    console.log("User conencted:", socket.id);
+    console.log("User connected:", socket.id);
     socket.on("get-connections", id => {
         if(!id) return;
         console.log(id);
@@ -37,7 +37,11 @@ io.on("connect", (socket) => {
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
-            if(!docs) return io.to(socket.id).emit("new-connection", []);
+            if(!docs) {
+                console.log("No connections");
+                io.to(socket.id).emit("Welcome", "HELLOOO");
+                io.to(socket.id).emit("new-connection", []);
+            }
 
             docs.connections.forEach(connection => {
                 // Connection exists. Loading previous chats

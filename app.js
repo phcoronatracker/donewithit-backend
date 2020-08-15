@@ -22,14 +22,18 @@ io.on("connect", (socket) => {
     console.log("User connected:", socket.id);
 
     socket.on("send-id", id => {
+        if(!id) return;
+
+        console.log("Users:", users);
+        if(users.length === 0) 
+            return users.push({ id, socketID: socket.id });
+
         for(let i = 0; i < users.length; i++) {
-            if(users[i].id === id) {
-                users[i].socketID = socket.id;
-                break;
-            } else {
-                users.unshift({ id, socketID: socket.id });
-            }
+            if(users[i].id === id) 
+                return users[i].socketID = socket.id;
         }
+
+        return users.unshift({ id, socketID: socket.id });
     });
 
     socket.on("get-connections", id => {

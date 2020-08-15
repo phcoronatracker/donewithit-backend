@@ -101,7 +101,7 @@ io.on("connect", (socket) => {
                     match = true;
                     conn[i].timestamp = message.createdAt;
                     conn[i].messages.push({
-                        $each: message,
+                        $each: [message],
                         $position: 0
                     });
                     break;
@@ -119,7 +119,7 @@ io.on("connect", (socket) => {
                 });
                 
                 docs.connections.push({
-                    $each: connection,
+                    $each: [connection],
                     $position: 0
                 });
             }
@@ -141,7 +141,7 @@ io.on("connect", (socket) => {
                     match = true;
                     conn[i].timestamp = message.createdAt;
                     conn[i].messages.push({
-                        $each: message,
+                        $each: [message],
                         $position: 0
                     });
                     break;
@@ -159,7 +159,7 @@ io.on("connect", (socket) => {
                 });
                 
                 docs.connections.push({
-                    $each: connection,
+                    $each: [connection],
                     $position: 0
                 });
             }

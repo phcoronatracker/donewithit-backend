@@ -102,11 +102,9 @@ io.on("connect", (socket) => {
             } else {
                 // Connections is at least 1
                 for(let i = 0; i < conn.length; i++) {
-                    var match = false;
                     if(conn[i].senderID === receiver._id) {
                         // Connection exists on user side
                         // Update the connection timestamp
-                        match = true;
                         conn[i].timestamp = message.createdAt;
                         conn[i].messages.push({
                             $each: [message],
@@ -114,7 +112,7 @@ io.on("connect", (socket) => {
                         });
                         await docs.save();
                         break;
-                    } else if(!match && i === conn.length - 1)  {
+                    } else if(i === conn.length - 1)  {
                         // Connection does not exist. Create a new one
                         const connection = new Connection({
                             senderID: receiver._id,
@@ -129,6 +127,7 @@ io.on("connect", (socket) => {
                             $position: 0
                         });
                         await docs.save();
+                        break;
                     }
                 }
             }
@@ -158,11 +157,9 @@ io.on("connect", (socket) => {
                 sendNotification(docs.expoPushToken, sender.name, message.text);
             } else {
                 for(let i = 0; i < conn.length; i++) {
-                    var match = false;
                     if(conn[i].senderID === sender._id) {
                         // Connection exists on receiver side
                         // Update the connection timestamp
-                        match = true;
                         conn[i].timestamp = message.createdAt;
                         conn[i].messages.push({
                             $each: [message],
@@ -170,7 +167,7 @@ io.on("connect", (socket) => {
                         });
                         await docs.save();
                         break;
-                    } else if(!match && i == conn.length - 1) {
+                    } else if(i == conn.length - 1) {
                         // Connection does not exist. Creating a new one
                         const connection = new Connection({
                             senderID: sender._id,
@@ -186,6 +183,7 @@ io.on("connect", (socket) => {
                         });
                         await docs.save();
                         sendNotification(docs.expoPushToken, sender.name, message.text);
+                        break;
                     }
                 }
             }

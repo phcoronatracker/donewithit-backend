@@ -36,39 +36,37 @@ io.on("connect", (socket) => {
             if(!docs) return;
 
             if(!docs.connections || docs.connections.length === 0) 
-                return io.to(socket.id).emit("get-connections", []);
-
-            return io.to(socket.id).emit("get-connections", docs.connections);
+                io.to(socket.id).emit("get-connections", []);
+            else
+                io.to(socket.id).emit("get-connections", docs.connections);
         }); 
     });
 
     socket.on("new-connection", ({ id, receiverID }) => {
         if(!id) return;
         console.log("New Connection:", id);
-        console.log("To be connected to:", receiverID);
         
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
             if(!docs) return;
 
-            console.log("Connection Length:", docs.connections.length);
-
-            if(!docs.connections || docs.connections.length === 0) 
-                return io.to(socket.id).emit("new-connection", []);
-
-            for(let i = 0; i < docs.connections.length; i++) {
-                // Connection exists. Loading previous chats
-                if(docs.connections[i].senderID == receiverID) {
-                    io.to(socket.id).emit("new-connection", docs.connections[i].messages);
-                    console.log("Messages:", docs.connections[i].messages);
-                    break;
-                } else if (i == docs.connections.length - 1) {
-                    // Connection is new. No messages return
-                    io.to(socket.id).emit("new-connection", []);
-                    break;
+            if(!docs.connections || docs.connections.length === 0) {
+                io.to(socket.id).emit("new-connection", []);
+            } else {
+                for(let i = 0; i < docs.connections.length; i++) {
+                    // Connection exists. Loading previous chats
+                    if(docs.connections[i].senderID == receiverID) {
+                        io.to(socket.id).emit("new-connection", docs.connections[i].messages);
+                        break;
+                    } else if (i == docs.connections.length - 1) {
+                        // Connection is new. No messages return
+                        io.to(socket.id).emit("new-connection", []);
+                        break;
+                    }
                 }
             }
+
         });
     });
 
@@ -93,7 +91,7 @@ io.on("connect", (socket) => {
             var conn = docs.connections;
             if(conn.length === 0 || !conn) {
                  // Connection does not exist. Create a new one
-                if(!conn) docs.connections = [];
+                if(!conn) conn = [];
                 const connection = new Connection({
                     senderID: receiver._id,
                     senderName: receiver.name,
@@ -102,15 +100,23 @@ io.on("connect", (socket) => {
                     messages: [message]
                 });
                 
-                docs.connections.push({
+                conn.push({
                     $each: [connection],
                     $position: 0
                 });
-                await docs.save();
+
+                docs.save();
             } else {
                 // Connections is at least 1
+                Connection.find({}, (err, res) => {
+                    if(err) console.log("Errorrrrr");
+                    if(!res) console.log("NO COLLECTIONS BOI");
+
+                    console.log("RESULT OF CONNECTIONS:", res);
+                });
+                
                 for(let i = 0; i < conn.length; i++) {
-                    if(conn[i].senderID === receiver._id) {
+                    if(conn[i].senderID == receiver._id) {
                         // Connection exists on user side
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;

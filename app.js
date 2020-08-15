@@ -38,8 +38,7 @@ io.on("connect", (socket) => {
             if(!docs.connections || docs.connections.length === 0) 
                 return io.to(socket.id).emit("get-connections", []);
 
-            console.log("Connection exists");
-            return io.to(socket.id).emit("get-connections", [...docs.connections]);
+            return io.to(socket.id).emit("get-connections", docs.connections);
         }); 
     });
 

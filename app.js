@@ -216,4 +216,4 @@ app.use('/listings', listings);
 app.use('/expo-push-token', expoToken);
 app.use('/upload', upload);
 
-server.listen(port, () => console.log(`App is listening on http://localhost:${port}`));
+server.listen(port, () => console.log(`App is listening on port ${port}`));

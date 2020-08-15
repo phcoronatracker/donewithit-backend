@@ -82,7 +82,7 @@ io.on("connect", (socket) => {
             if(err) throw err;
             if(!docs) return;
 
-            var match = false;
+            var match = true;
             var conn = docs.connections;
 
             for(let i = 0; i < conn.length; i++) {
@@ -95,11 +95,14 @@ io.on("connect", (socket) => {
                         $each: [message],
                         $position: 0
                     });
+                    await docs.save();
                     break;
+                } else {
+                    match = false;
                 }
             }
 
-            if(!match) {
+            if(match === false) {
                 // Connection does not exist. Create a new one
                 const connection = new Connection({
                     senderID: receiver._id,
@@ -113,16 +116,16 @@ io.on("connect", (socket) => {
                     $each: [connection],
                     $position: 0
                 });
+                await docs.save();
             }
 
-            await docs.save();
         });
 
         User.findById(receiver._id, async (err, docs) => {
             if(err) throw err;
             if(!docs) return;
 
-            var match = false;
+            var match = true;
             var conn = docs.connections;
 
             for(let i = 0; i < conn.length; i++) {
@@ -135,16 +138,19 @@ io.on("connect", (socket) => {
                         $each: [message],
                         $position: 0
                     });
+                    await docs.save();
                     break;
+                } else {
+                    match = false;
                 }
             }
 
-            if(!match) {
+            if(match === false) {
                 // Connection does not exist. Creating a new one
                 const connection = new Connection({
                     senderID: sender._id,
                     senderName: sender.name,
-                    senderImage: sender.image,
+                    senderImage: sender.avatar,
                     timestamp: message.createdAt,
                     messages: [message]
                 });
@@ -153,9 +159,9 @@ io.on("connect", (socket) => {
                     $each: [connection],
                     $position: 0
                 });
+                await docs.save();
             }
 
-            await docs.save();
 
             sendNotification(docs.expoPushToken, sender.name, message.text);
         });

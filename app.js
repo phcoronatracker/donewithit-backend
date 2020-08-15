@@ -100,31 +100,16 @@ io.on("connect", (socket) => {
                     messages: [message]
                 });
                 
-                conn.push({
-                    $each: [connection],
-                    $position: 0
-                });
-
-                docs.save();
+                conn.push(connection);
+                await docs.save();
             } else {
                 // Connections is at least 1
-                Connection.find({}, (err, res) => {
-                    if(err) console.log("Errorrrrr");
-                    if(!res) console.log("NO COLLECTIONS BOI");
-
-                    console.log("RESULT OF CONNECTIONS:", res);
-                });
-
                 for(let i = 0; i < conn.length; i++) {
                     if(conn[i].senderID == receiver._id) {
-                        console.log("THIS BITCH EXIST");
                         // Connection exists on user side
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;
-                        conn[i].messages.push({
-                            $each: [message],
-                            $position: 0
-                        });
+                        conn[i].messages.push(message);
                         await docs.save();
                         break;
                     } else if(i === conn.length - 1)  {
@@ -141,7 +126,7 @@ io.on("connect", (socket) => {
                             $each: [connection],
                             $position: 0
                         });
-                        await conn.save();
+                        await docs.save();
                         break;
                     }
                 }
@@ -155,7 +140,7 @@ io.on("connect", (socket) => {
             var conn = docs.connections;
             if(conn.length === 0 || !conn) {
                 // Connection is empty. Creating a new one
-                if(!conn) docs.connections = [];
+                if(!conn) conn = [];
                 const connection = new Connection({
                     senderID: sender._id,
                     senderName: sender.name,
@@ -164,14 +149,12 @@ io.on("connect", (socket) => {
                     messages: [message]
                 });
                 
-                conn.push({
-                    $each: [connection],
-                    $position: 0
-                });
+                conn.push(connection);
                 await docs.save();
             } else {
                 for(let i = 0; i < conn.length; i++) {
                     if(conn[i].senderID === sender._id) {
+                        console.log("FUCKKK UGHHH ATTACH TO PREVIOUS MESSAGE UGH");
                         // Connection exists on receiver side
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;
@@ -179,9 +162,9 @@ io.on("connect", (socket) => {
                             $each: [message],
                             $position: 0
                         });
-                        await conn.save();
+                        await docs.save();
                         break;
-                    } else if(i == conn.length - 1) {
+                    } else if(i === conn.length - 1) {
                         // Connection does not exist. Creating a new one
                         const connection = new Connection({
                             senderID: sender._id,

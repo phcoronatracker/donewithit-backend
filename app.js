@@ -56,8 +56,8 @@ io.on("connect", (socket) => {
 
             for(let i = 0; i < docs.connections.length; i++) {
                 // Connection exists. Loading previous chats
-                if(docs.connection[i].senderID === receiverID)  
-                    return io.to(socket.id).emit("new-connection", connection.messages);
+                if(docs.connections[i].senderID === receiverID)  
+                    return io.to(socket.id).emit("new-connection", docs.connections.messages);
             }
             // Connection is new. No messages return
             return io.to(socket.id).emit("new-connection", []);

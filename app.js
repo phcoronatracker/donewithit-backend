@@ -45,22 +45,30 @@ io.on("connect", (socket) => {
     socket.on("new-connection", ({ id, receiverID }) => {
         if(!id) return;
         console.log("New Connection:", id);
+        console.log("To be connected to:", receiverID);
         
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
             if(err) throw err;
             if(!docs) return;
 
+            console.log("Connection Length:", docs.connections.length);
+
             if(!docs.connections || docs.connections.length === 0) 
                 return io.to(socket.id).emit("new-connection", []);
 
             for(let i = 0; i < docs.connections.length; i++) {
                 // Connection exists. Loading previous chats
-                if(docs.connections[i].senderID === receiverID)  
-                    return io.to(socket.id).emit("new-connection", docs.connections[i].messages);
+                if(docs.connections[i].senderID == receiverID) {
+                    io.to(socket.id).emit("new-connection", docs.connections[i].messages);
+                    console.log("Messages:", docs.connections[i].messages);
+                    break;
+                } else if (i == docs.connections.length - 1) {
+                    // Connection is new. No messages return
+                    io.to(socket.id).emit("new-connection", []);
+                    break;
+                }
             }
-            // Connection is new. No messages return
-            return io.to(socket.id).emit("new-connection", []);
         });
     });
 

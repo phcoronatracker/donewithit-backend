@@ -24,15 +24,6 @@ io.on("connect", (socket) => {
     socket.on("send-id", id => {
         if(!id) return;
 
-        console.log("Users:", users);
-        if(users.length === 0) 
-            return users.push({ id, socketID: socket.id });
-
-        for(let i = 0; i < users.length; i++) {
-            if(users[i].id === id) 
-                return users[i].socketID = socket.id;
-        }
-
         return users.unshift({ id, socketID: socket.id });
     });
 
@@ -76,11 +67,11 @@ io.on("connect", (socket) => {
     socket.on("new-message", message => {
         if(!message) return;
 
-        const sender = message.user, receiver = message.receiver
-
+        const sender = message.user, receiver = message.receiver;
+        
+        io.to(socket.id).emit("new-message", [message]);
         for(let i = 0; i < users.length; i++) {
             if(users[i].id === receiver._id) {
-                io.to(socket.id).emit("new-message", [message]);
                 io.to(users[i].socketID).emit("new-message", [message]);
                 break;
             }
@@ -171,6 +162,16 @@ io.on("connect", (socket) => {
     });
     
     socket.on("disconnect", (reason) => {
+        var userIndex;
+        for(let i = 0; i < users.length; i++) {
+            if(users[i].socketID === socket.id) {
+                userIndex = i;
+                console.log("Remove ID:", users[i].id);
+                break;
+            }
+        }
+        users.splice(userIndex, 1);
+
         console.log("User disconnected:", socket.id);
         console.log("Reason:", reason);
     });

@@ -114,9 +114,10 @@ io.on("connect", (socket) => {
 
                     console.log("RESULT OF CONNECTIONS:", res);
                 });
-                
+
                 for(let i = 0; i < conn.length; i++) {
                     if(conn[i].senderID == receiver._id) {
+                        console.log("THIS BITCH EXIST");
                         // Connection exists on user side
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;

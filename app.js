@@ -122,11 +122,11 @@ io.on("connect", (socket) => {
                             messages: [message]
                         });
                         
-                        docs.connections.push({
+                        conn.push({
                             $each: [connection],
                             $position: 0
                         });
-                        await docs.save();
+                        await conn.save();
                         break;
                     }
                 }
@@ -149,12 +149,11 @@ io.on("connect", (socket) => {
                     messages: [message]
                 });
                 
-                docs.connections.push({
+                conn.push({
                     $each: [connection],
                     $position: 0
                 });
                 await docs.save();
-                sendNotification(docs.expoPushToken, sender.name, message.text);
             } else {
                 for(let i = 0; i < conn.length; i++) {
                     if(conn[i].senderID === sender._id) {
@@ -165,7 +164,7 @@ io.on("connect", (socket) => {
                             $each: [message],
                             $position: 0
                         });
-                        await docs.save();
+                        await conn.save();
                         break;
                     } else if(i == conn.length - 1) {
                         // Connection does not exist. Creating a new one
@@ -177,16 +176,16 @@ io.on("connect", (socket) => {
                             messages: [message]
                         });
                         
-                        docs.connections.push({
+                        conn.push({
                             $each: [connection],
                             $position: 0
                         });
                         await docs.save();
-                        sendNotification(docs.expoPushToken, sender.name, message.text);
                         break;
                     }
                 }
             }
+            sendNotification(docs.expoPushToken, sender.name, message.text);
         });
     });
     

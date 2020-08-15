@@ -83,35 +83,53 @@ io.on("connect", (socket) => {
             if(!docs) return;
 
             var conn = docs.connections;
-            
-            for(let i = 0; i < conn.length; i++) {
-                var match = false;
-                if(conn[i].senderID === receiver._id) {
-                    // Connection exists on user side
-                    // Update the connection timestamp
-                    match = true;
-                    conn[i].timestamp = message.createdAt;
-                    conn[i].messages.push({
-                        $each: [message],
-                        $position: 0
-                    });
-                    await docs.save();
-                    break;
-                } else if(!match && i === conn.length - 1)  {
-                    // Connection does not exist. Create a new one
-                    const connection = new Connection({
-                        senderID: receiver._id,
-                        senderName: receiver.name,
-                        senderImage: receiver.image,
-                        timestamp: message.createdAt,
-                        messages: [message]
-                    });
-                    
-                    docs.connections.push({
-                        $each: [connection],
-                        $position: 0
-                    });
-                    await docs.save();
+            if(conn.length === 0 || !conn) {
+                 // Connection does not exist. Create a new one
+                if(!conn) docs.connections = [];
+                const connection = new Connection({
+                    senderID: receiver._id,
+                    senderName: receiver.name,
+                    senderImage: receiver.image,
+                    timestamp: message.createdAt,
+                    messages: [message]
+                });
+                
+                docs.connections.push({
+                    $each: [connection],
+                    $position: 0
+                });
+                await docs.save();
+            } else {
+                // Connections is at least 1
+                for(let i = 0; i < conn.length; i++) {
+                    var match = false;
+                    if(conn[i].senderID === receiver._id) {
+                        // Connection exists on user side
+                        // Update the connection timestamp
+                        match = true;
+                        conn[i].timestamp = message.createdAt;
+                        conn[i].messages.push({
+                            $each: [message],
+                            $position: 0
+                        });
+                        await docs.save();
+                        break;
+                    } else if(!match && i === conn.length - 1)  {
+                        // Connection does not exist. Create a new one
+                        const connection = new Connection({
+                            senderID: receiver._id,
+                            senderName: receiver.name,
+                            senderImage: receiver.image,
+                            timestamp: message.createdAt,
+                            messages: [message]
+                        });
+                        
+                        docs.connections.push({
+                            $each: [connection],
+                            $position: 0
+                        });
+                        await docs.save();
+                    }
                 }
             }
         });
@@ -121,36 +139,54 @@ io.on("connect", (socket) => {
             if(!docs) return;
 
             var conn = docs.connections;
-            
-            for(let i = 0; i < conn.length; i++) {
-                var match = false;
-                if(conn[i].senderID === sender._id) {
-                    // Connection exists on receiver side
-                    // Update the connection timestamp
-                    match = true;
-                    conn[i].timestamp = message.createdAt;
-                    conn[i].messages.push({
-                        $each: [message],
-                        $position: 0
-                    });
-                    await docs.save();
-                    break;
-                } else if(!match && i == conn.length - 1) {
-                    // Connection does not exist. Creating a new one
-                    const connection = new Connection({
-                        senderID: sender._id,
-                        senderName: sender.name,
-                        senderImage: sender.avatar,
-                        timestamp: message.createdAt,
-                        messages: [message]
-                    });
-                    
-                    docs.connections.push({
-                        $each: [connection],
-                        $position: 0
-                    });
-                    await docs.save();
-                    sendNotification(docs.expoPushToken, sender.name, message.text);
+            if(conn.length === 0 || !conn) {
+                // Connection is empty. Creating a new one
+                if(!conn) docs.connections = [];
+                const connection = new Connection({
+                    senderID: sender._id,
+                    senderName: sender.name,
+                    senderImage: sender.avatar,
+                    timestamp: message.createdAt,
+                    messages: [message]
+                });
+                
+                docs.connections.push({
+                    $each: [connection],
+                    $position: 0
+                });
+                await docs.save();
+                sendNotification(docs.expoPushToken, sender.name, message.text);
+            } else {
+                for(let i = 0; i < conn.length; i++) {
+                    var match = false;
+                    if(conn[i].senderID === sender._id) {
+                        // Connection exists on receiver side
+                        // Update the connection timestamp
+                        match = true;
+                        conn[i].timestamp = message.createdAt;
+                        conn[i].messages.push({
+                            $each: [message],
+                            $position: 0
+                        });
+                        await docs.save();
+                        break;
+                    } else if(!match && i == conn.length - 1) {
+                        // Connection does not exist. Creating a new one
+                        const connection = new Connection({
+                            senderID: sender._id,
+                            senderName: sender.name,
+                            senderImage: sender.avatar,
+                            timestamp: message.createdAt,
+                            messages: [message]
+                        });
+                        
+                        docs.connections.push({
+                            $each: [connection],
+                            $position: 0
+                        });
+                        await docs.save();
+                        sendNotification(docs.expoPushToken, sender.name, message.text);
+                    }
                 }
             }
         });

@@ -80,8 +80,13 @@ io.on("connect", (socket) => {
             if(!docs) return;
 
             console.log("USER EXIST ON SENDER SIDE");
-
             console.log("Connection Length:", docs.connections.length);
+
+            const conn = docs.connections;
+            conn.forEach(element => {
+                if(element.senderID === receiver._id) 
+                    console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
+            });
         });
 
         User.findById(receiver._id, (err, docs) => {
@@ -89,8 +94,13 @@ io.on("connect", (socket) => {
             if(!docs) return;
 
             console.log("USER EXIST ON RECEIVER SIDE");
-
             console.log("Connection Length:", docs.connections.length);
+
+            const conn = docs.connections;
+            conn.forEach(element => {
+                if(element.senderID === sender._id) 
+                    console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
+            });
         });
         
         // io.to(socket.id).emit("new-message", [message]);

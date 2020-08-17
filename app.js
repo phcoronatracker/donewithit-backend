@@ -35,7 +35,7 @@ io.on("connect", (socket) => {
             if(err) throw err;
             if(!docs) return;
 
-            if(!docs.connections || docs.connections.length === 0) 
+            if(!docs.connections || docs.connections.length == 0) 
                 io.to(socket.id).emit("get-connections", []);
             else
                 io.to(socket.id).emit("get-connections", docs.connections);
@@ -51,7 +51,7 @@ io.on("connect", (socket) => {
             if(err) throw err;
             if(!docs) return;
 
-            if(!docs.connections || docs.connections.length === 0) {
+            if(!docs.connections || docs.connections.length == 0) {
                 io.to(socket.id).emit("new-connection", []);
             } else {
                 for(let i = 0; i < docs.connections.length; i++) {

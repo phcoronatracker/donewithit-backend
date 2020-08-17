@@ -37,7 +37,7 @@ const connectionSchema = new mongoose.Schema({
     senderImage: String,
     timestamp: Date,
     messages: [messageSchema]
-}, { versionKey: false, _id: false });
+}, { versionKey: false });
 
 const listingSchema = new mongoose.Schema({
     title: String,

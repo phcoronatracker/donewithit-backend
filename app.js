@@ -84,7 +84,7 @@ io.on("connect", (socket) => {
 
             const conn = docs.connections;
             conn.forEach(element => {
-                if(element.senderID === receiver._id) 
+                if(element.senderID == receiver._id) 
                     console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
             });
         });
@@ -98,7 +98,7 @@ io.on("connect", (socket) => {
 
             const conn = docs.connections;
             conn.forEach(element => {
-                if(element.senderID === sender._id) 
+                if(element.senderID == sender._id) 
                     console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
             });
         });

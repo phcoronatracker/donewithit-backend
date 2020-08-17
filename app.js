@@ -200,7 +200,8 @@ io.on("connect", (socket) => {
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;
                         conn[i].messages.push({
-                            $each: [message]
+                            $each: [message],
+                            $position: 0
                         });
                         await docs.save();
                         break;

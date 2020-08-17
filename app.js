@@ -74,117 +74,135 @@ io.on("connect", (socket) => {
         if(!message) return;
 
         const sender = message.user, receiver = message.receiver;
+
+        User.findById(sender._id, (err, docs) => {
+            if(err) throw err;
+            if(!docs) return;
+
+            console.log("USER EXIST ON SENDER SIDE");
+
+            console.log("Connection Length:", docs.connections.length);
+        });
+
+        User.findById(receiver._id, (err, docs) => {
+            if(err) throw err;
+            if(!docs) return;
+
+            console.log("USER EXIST ON RECEIVER SIDE");
+
+            console.log("Connection Length:", docs.connections.length);
+        });
         
-        io.to(socket.id).emit("new-message", [message]);
-        for(let i = 0; i < users.length; i++) {
-            if(users[i].id === receiver._id) {
-                io.to(users[i].socketID).emit("new-message", [message]);
-                break;
-            }
-        }
+        // io.to(socket.id).emit("new-message", [message]);
+        // for(let i = 0; i < users.length; i++) {
+        //     if(users[i].id === receiver._id) {
+        //         io.to(users[i].socketID).emit("new-message", [message]);
+        //         break;
+        //     }
+        // }
 
-        // Finding with the id of the current user
-        User.findById(sender._id, async (err, docs) => {
-            if(err) throw err;
-            if(!docs) return;
+        // // Finding with the id of the current user
+        // User.findById(sender._id, async (err, docs) => {
+        //     if(err) throw err;
+        //     if(!docs) return;
 
-            var conn = docs.connections;
-            if(conn.length === 0 || !conn) {
-                 // Connection does not exist. Create a new one
-                if(!conn) conn = [];
-                const connection = new Connection({
-                    senderID: receiver._id,
-                    senderName: receiver.name,
-                    senderImage: receiver.image,
-                    timestamp: message.createdAt,
-                    messages: [message]
-                });
+        //     var conn = docs.connections;
+        //     if(conn.length === 0 || !conn) {
+        //          // Connection does not exist. Create a new one
+        //         if(!conn) conn = [];
+        //         const connection = new Connection({
+        //             senderID: receiver._id,
+        //             senderName: receiver.name,
+        //             senderImage: receiver.image,
+        //             timestamp: message.createdAt,
+        //             messages: [message]
+        //         });
                 
-                conn.push(connection);
-                await docs.save();
-            } else {
-                // Connections is at least 1
-                for(let i = 0; i < conn.length; i++) {
-                    if(conn[i].senderID == receiver._id) {
-                        // Connection exists on user side
-                        // Update the connection timestamp
-                        conn[i].timestamp = message.createdAt;
-                        conn[i].messages.push(message);
-                        await docs.save();
-                        break;
-                    } else if(i === conn.length - 1)  {
-                        // Connection does not exist. Create a new one
-                        const connection = new Connection({
-                            senderID: receiver._id,
-                            senderName: receiver.name,
-                            senderImage: receiver.image,
-                            timestamp: message.createdAt,
-                            messages: [message]
-                        });
+        //         conn.push(connection);
+        //         await docs.save();
+        //     } else {
+        //         // Connections is at least 1
+        //         for(let i = 0; i < conn.length; i++) {
+        //             if(conn[i].senderID == receiver._id) {
+        //                 // Connection exists on user side
+        //                 // Update the connection timestamp
+        //                 conn[i].timestamp = message.createdAt;
+        //                 conn[i].messages.push(message);
+        //                 await docs.save();
+        //                 break;
+        //             } else if(i === conn.length - 1)  {
+        //                 // Connection does not exist. Create a new one
+        //                 const connection = new Connection({
+        //                     senderID: receiver._id,
+        //                     senderName: receiver.name,
+        //                     senderImage: receiver.image,
+        //                     timestamp: message.createdAt,
+        //                     messages: [message]
+        //                 });
                         
-                        conn.push({
-                            $each: [connection],
-                            $position: 0
-                        });
-                        await docs.save();
-                        break;
-                    }
-                }
-            }
-        });
+        //                 conn.push({
+        //                     $each: [connection],
+        //                     $position: 0
+        //                 });
+        //                 await docs.save();
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // });
 
-        User.findById(receiver._id, async (err, docs) => {
-            if(err) throw err;
-            if(!docs) return;
+        // User.findById(receiver._id, async (err, docs) => {
+        //     if(err) throw err;
+        //     if(!docs) return;
 
-            var conn = docs.connections;
-            if(conn.length === 0 || !conn) {
-                // Connection is empty. Creating a new one
-                if(!conn) conn = [];
-                const connection = new Connection({
-                    senderID: sender._id,
-                    senderName: sender.name,
-                    senderImage: sender.avatar,
-                    timestamp: message.createdAt,
-                    messages: [message]
-                });
+        //     var conn = docs.connections;
+        //     if(conn.length === 0 || !conn) {
+        //         // Connection is empty. Creating a new one
+        //         if(!conn) conn = [];
+        //         const connection = new Connection({
+        //             senderID: sender._id,
+        //             senderName: sender.name,
+        //             senderImage: sender.avatar,
+        //             timestamp: message.createdAt,
+        //             messages: [message]
+        //         });
                 
-                conn.push(connection);
-                await docs.save();
-            } else {
-                for(let i = 0; i < conn.length; i++) {
-                    if(conn[i].senderID === sender._id) {
-                        console.log("FUCKKK UGHHH ATTACH TO PREVIOUS MESSAGE UGH");
-                        // Connection exists on receiver side
-                        // Update the connection timestamp
-                        conn[i].timestamp = message.createdAt;
-                        conn[i].messages.push({
-                            $each: [message],
-                            $position: 0
-                        });
-                        await docs.save();
-                        break;
-                    } else if(i === conn.length - 1) {
-                        // Connection does not exist. Creating a new one
-                        const connection = new Connection({
-                            senderID: sender._id,
-                            senderName: sender.name,
-                            senderImage: sender.avatar,
-                            timestamp: message.createdAt,
-                            messages: [message]
-                        });
+        //         conn.push(connection);
+        //         await docs.save();
+        //     } else {
+        //         for(let i = 0; i < conn.length; i++) {
+        //             if(conn[i].senderID === sender._id) {
+        //                 console.log("FUCKKK UGHHH ATTACH TO PREVIOUS MESSAGE UGH");
+        //                 // Connection exists on receiver side
+        //                 // Update the connection timestamp
+        //                 conn[i].timestamp = message.createdAt;
+        //                 conn[i].messages.push({
+        //                     $each: [message],
+        //                     $position: 0
+        //                 });
+        //                 await docs.save();
+        //                 break;
+        //             } else if(i === conn.length - 1) {
+        //                 // Connection does not exist. Creating a new one
+        //                 const connection = new Connection({
+        //                     senderID: sender._id,
+        //                     senderName: sender.name,
+        //                     senderImage: sender.avatar,
+        //                     timestamp: message.createdAt,
+        //                     messages: [message]
+        //                 });
                         
-                        conn.push({
-                            $each: [connection],
-                            $position: 0
-                        });
-                        await docs.save();
-                        break;
-                    }
-                }
-            }
-            sendNotification(docs.expoPushToken, sender.name, message.text);
-        });
+        //                 conn.push({
+        //                     $each: [connection],
+        //                     $position: 0
+        //                 });
+        //                 await docs.save();
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     sendNotification(docs.expoPushToken, sender.name, message.text);
+        // });
     });
     
     socket.on("disconnect", (reason) => {

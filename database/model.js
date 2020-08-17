@@ -24,7 +24,7 @@ const messageSchema = new mongoose.Schema({
         image: String
     },
     image: String
-}, { versionKey: false, _id: String });
+}, { versionKey: false });
 
 const imageSchema = new mongoose.Schema({
     url: String,

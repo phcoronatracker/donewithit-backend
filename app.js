@@ -102,14 +102,6 @@ io.on("connect", (socket) => {
         //             console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
         //     });
         // });
-        
-        io.to(socket.id).emit("new-message", [message]);
-        for(let i = 0; i < users.length; i++) {
-            if(users[i].id == receiver._id) {
-                io.to(users[i].socketID).emit("new-message", [message]);
-                break;
-            }
-        }
 
         User.findById(sender._id, async (err, docs) => {
             if(err) throw err;
@@ -132,7 +124,10 @@ io.on("connect", (socket) => {
                     $position: 0
                 });
 
-                await docs.save();
+                await docs.save((err, res) => {
+                    if(err) throw err;
+                    io.to(socket.id).emit("new-message", [res]);
+                });
             } else {
                 // Connections is at least 1
                 for(let i = 0; i < conn.length; i++) {
@@ -146,7 +141,10 @@ io.on("connect", (socket) => {
                             $position: 0
                         });
 
-                        await docs.save();
+                        await docs.save((err, res) => {
+                            if(err) throw err;
+                            io.to(socket.id).emit("new-message", [res]);
+                        });
                         break;
                     } else if(i == conn.length - 1)  {
                         // Connection does not exist. Create a new one
@@ -163,7 +161,10 @@ io.on("connect", (socket) => {
                             $position: 0
                         });
 
-                        await docs.save();
+                        await docs.save((err, res) => {
+                            if(err) throw err;
+                            io.to(socket.id).emit("new-message", [res]);
+                        });
                         break;
                     }
                 }
@@ -191,7 +192,15 @@ io.on("connect", (socket) => {
                     $position: 0
                 });
 
-                await docs.save();
+                await docs.save((err, res) => {
+                    if(err) throw err;
+                    for(let i = 0; i < users.length; i++) {
+                        if(users[i].id == receiver._id) {
+                            io.to(users[i].socketID).emit("new-message", [res]);
+                            break;
+                        }
+                    }
+                });
             } else {
                 for(let i = 0; i < conn.length; i++) {
                     if(conn[i].senderID == sender._id) {
@@ -203,7 +212,15 @@ io.on("connect", (socket) => {
                             $each: [message],
                             $position: 0
                         });
-                        await docs.save();
+                        await docs.save((err, res) => {
+                            if(err) throw err;
+                            for(let i = 0; i < users.length; i++) {
+                                if(users[i].id == receiver._id) {
+                                    io.to(users[i].socketID).emit("new-message", [res]);
+                                    break;
+                                }
+                            }
+                        });
                         break;
                     } else if(i == conn.length - 1) {
                         // Connection does not exist. Creating a new one
@@ -219,7 +236,15 @@ io.on("connect", (socket) => {
                             $each: [connection],
                             $position: 0
                         });
-                        await docs.save();
+                        await docs.save((err, res) => {
+                            if(err) throw err;
+                            for(let i = 0; i < users.length; i++) {
+                                if(users[i].id == receiver._id) {
+                                    io.to(users[i].socketID).emit("new-message", [res]);
+                                    break;
+                                }
+                            }
+                        });
                         break;
                     }
                 }

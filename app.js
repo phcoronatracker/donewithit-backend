@@ -29,7 +29,6 @@ io.on("connect", (socket) => {
 
     socket.on("get-connections", id => {
         if(!id) return;
-        console.log("Getting connections for:", id);
 
         User.findById(id, (err, docs) => {
             if(err) throw err;
@@ -44,7 +43,6 @@ io.on("connect", (socket) => {
 
     socket.on("new-connection", ({ id, receiverID }) => {
         if(!id) return;
-        console.log("New Connection:", id);
         
         // Checking if connection already exists in current user
         User.findById(id, (err, docs) => {
@@ -74,34 +72,6 @@ io.on("connect", (socket) => {
         if(!message) return;
 
         const sender = message.user, receiver = message.receiver;
-
-        // User.findById(sender._id, (err, docs) => {
-        //     if(err) throw err;
-        //     if(!docs) return;
-
-        //     console.log("USER EXIST ON SENDER SIDE");
-        //     console.log("Connection Length:", docs.connections.length);
-
-        //     const conn = docs.connections;
-        //     conn.forEach(element => {
-        //         if(element.senderID == receiver._id) 
-        //             console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
-        //     });
-        // });
-
-        // User.findById(receiver._id, (err, docs) => {
-        //     if(err) throw err;
-        //     if(!docs) return;
-
-        //     console.log("USER EXIST ON RECEIVER SIDE");
-        //     console.log("Connection Length:", docs.connections.length);
-
-        //     const conn = docs.connections;
-        //     conn.forEach(element => {
-        //         if(element.senderID == sender._id) 
-        //             console.log("USER ALREADY EXIST ON YOUR CONNECTION WITH ID:", element.senderID);
-        //     });
-        // });
         
         io.to(socket.id).emit("new-message", [message]);
         for(let i = 0; i < users.length; i++) {
@@ -139,7 +109,6 @@ io.on("connect", (socket) => {
                     if(conn[i].senderID == receiver._id) {
                         // Connection exists on user side
                         // Update the connection timestamp
-                        console.log("Connection exist from sender side");
                         conn[i].timestamp = message.createdAt;
                         conn[i].messages.push({
                             $each: [message],
@@ -195,7 +164,6 @@ io.on("connect", (socket) => {
             } else {
                 for(let i = 0; i < conn.length; i++) {
                     if(conn[i].senderID == sender._id) {
-                        console.log("Connection exist from receiver side");
                         // Connection exists on receiver side
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;

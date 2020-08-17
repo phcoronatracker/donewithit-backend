@@ -141,7 +141,10 @@ io.on("connect", (socket) => {
                         // Update the connection timestamp
                         console.log("Connection exist from sender side");
                         conn[i].timestamp = message.createdAt;
-                        conn[i].messages.push(message);
+                        conn[i].messages.push({
+                            $each: [message],
+                            $position: 0
+                        });
 
                         await docs.save();
                         break;
@@ -196,7 +199,10 @@ io.on("connect", (socket) => {
                         // Connection exists on receiver side
                         // Update the connection timestamp
                         conn[i].timestamp = message.createdAt;
-                        conn[i].messages.push(message);
+                        conn[i].messages.push({
+                            $each: [message],
+                            $position: 0
+                        });
                         await docs.save();
                         break;
                     } else if(i == conn.length - 1) {

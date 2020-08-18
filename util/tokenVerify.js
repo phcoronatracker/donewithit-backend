@@ -2,14 +2,14 @@ require('dotenv').config();
 const jwt = require("jsonwebtoken");
 
 module.exports = (token) => {
-    if(!token) return null;
+    if(!token) return false;
 
     try {
         const payload = jwt.verify(token, process.env.SECRET);
-        return payload;
+        return true;
     }
     catch (error) {
         console.log("Token is invalid for socket:", error);
-        return null;
+        return false;
     }
 }   

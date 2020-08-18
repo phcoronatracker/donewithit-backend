@@ -10,6 +10,7 @@ const messages = require('./routes/messages');
 const upload = require("./routes/upload");
 const { Connection, User } = require("./database/model");
 const sendNotification = require("./util/pushNotification");
+const tokenVerify = require("./util/tokenVerify");
 
 const app = express();
 const server = Server(app);
@@ -17,6 +18,14 @@ const io = socketIO(server);
 const port = process.env.PORT || 9000;
 
 const users = [];
+
+io.use((socket, next) => {
+    const token = socket.handshake.headers["x-auth-token"];
+    console.log("Token:", token);
+    if(tokenVerify(token)) return next();
+
+    return next(new Error("Token is invalid"));
+});
 
 io.on("connect", (socket) => {
     console.log("User connected:", socket.id);

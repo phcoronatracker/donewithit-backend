@@ -29,7 +29,7 @@ const users = [];
 
 io.on("connect", (socket) => {
     console.log("User connected:", socket.id);
-    console.log(socket.handshake.headers["x-auth-token"]);
+    console.log(socket.handshake.headers);
 
 
     socket.on("send-id", id => {

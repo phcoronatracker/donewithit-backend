@@ -204,14 +204,16 @@ io.on("connect", (socket) => {
     });
     
     socket.on("disconnect", (reason) => {
+        var userIndex;
         for(let i = 0; i < users.length; i++) {
             if(users[i].socketID === socket.id) {
-                console.log("Remove ID:", users[i].id);
-                users.splice(i, 1);
+                userIndex = i;
                 break;
             }
         }
-
+        console.log("Remove ID:", users[userIndex].id);
+        users.splice(i, 1);
+        
         console.log("User disconnected:", socket.id);
         console.log("Reason:", reason);
     });

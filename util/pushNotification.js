@@ -8,7 +8,6 @@ const sendNotification = async (targetToken, senderName, message) => {
 
     const sendChunks = async () => {
         chunks.forEach(async chunk => {
-            console.log("Sending Chunk", chunk);
             try {
                 const tickets = await expo.sendPushNotificationsAsync(chunk);
                 console.log("Tickets", tickets);

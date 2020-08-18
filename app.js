@@ -64,7 +64,6 @@ io.on("connect", (socket) => {
                     }
                 }
             }
-
         });
     });
 

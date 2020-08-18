@@ -19,18 +19,15 @@ const port = process.env.PORT || 9000;
 
 const users = [];
 
-// io.use((socket, next) => {
-//     const token = socket.handshake.headers["x-auth-token"];
-//     console.log("Token:", token);
-//     if(tokenVerify(token)) return next();
+io.use((socket, next) => {
+    const token = socket.handshake.headers["x-auth-token"];
+    if(tokenVerify(token)) return next();
 
-//     return next(new Error("Token is invalid"));
-// });
+    return next(new Error("Token is invalid"));
+});
 
 io.on("connect", (socket) => {
     console.log("User connected:", socket.id);
-    console.log(socket.handshake.headers);
-
 
     socket.on("send-id", id => {
         if(!id) return;
